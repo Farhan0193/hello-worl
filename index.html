@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#123b35">
-<title>LC Import & Wholesale Management</title>
+<title>LC Import & Wholesale Management — Labels Fixed 2026-10-29</title>
 <style>
 :root{--green:#145b50;--green2:#0e3c35;--line:#dce7e3;--bg:#f1f6f4;--muted:#667772}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#1d2926;font:14px Arial,"Noto Sans Bengali",sans-serif}
@@ -79,7 +79,7 @@ button.secondary{background:#e7f0ed;color:#174c42}button.danger{background:#c53d
 </section>
 <section id="pane-transactions" class="card pane hidden"><h2>Bank Transactions</h2>
 <form id="txnForm"><input type="hidden" name="id"><div class="grid"><div><label>Bank Account</label><select name="account_id" id="txnBank" required></select></div><div><label>Date</label><input name="date" type="date" required></div><div><label>Accounts Name</label><input name="name" required></div><div><label>ধরন</label><select name="type"><option value="in">Credit / জমা</option><option value="out">Debit / উত্তোলন</option></select></div><div><label>টাকার পরিমাণ</label><input name="amount" type="number" min=".01" step=".01" required></div><div><label>Reference / Cheque No.</label><input name="ref"></div></div><div class="actions"><button type="submit">Save Bank Transaction</button><button type="button" class="secondary hidden" id="cancelTxn">বাতিল</button></div></form>
-<div class="reportbox"><h3>Bank Statement Download</h3><div class="grid"><div><label>Statement Type</label><select id="statementMode"><option value="single">একটি ব্যাংকের স্টেটমেন্ট</option><option value="all">সব ব্যাংকের একদিনের হিসাব</option></select></div><div><label>Bank Account</label><select id="statementBank"></select></div><div><label>Account Holder</label><select id="statementHolder"></select></div><div><label>Date (From)</label><input id="dateFrom" type="date"></div><div><label>Date (To)</label><input id="dateTo" type="date"></div></div><div class="actions"><button type="button" id="showStatement">স্টেটমেন্ট দেখুন</button></div></div>
+<div class="reportbox"><h3>Bank Statement Download</h3><div class="grid"><div><label>Statement Type</label><select id="statementMode"><option value="single">একটি ব্যাংকের স্টেটমেন্ট</option><option value="holder">একজন Account Holder-এর সব হিসাব</option><option value="all">সব ব্যাংকের একদিনের হিসাব</option></select></div><div><label>Bank Account</label><select id="statementBank"></select></div><div><label>Account Holder</label><select id="statementHolder"></select></div><div><label>Date (From)</label><input id="dateFrom" type="date"></div><div><label>Date (To)</label><input id="dateTo" type="date"></div></div><div class="actions"><button type="button" id="showStatement">স্টেটমেন্ট দেখুন</button></div></div>
 <div id="txnTable"></div><div id="balanceSheet" class="hidden"></div>
 </section>
 <section id="pane-expenses" class="card pane hidden"><h2>Expenses</h2><form id="expenseForm"><input type="hidden" name="id"><div class="grid"><div><label>Date</label><input name="date" type="date" required></div><div><label>Accounts Name</label><input name="name" required></div><div><label>Amount</label><input name="amount" type="number" min=".01" step=".01" required></div><div><label>Payment Method</label><input name="method" placeholder="Cash / Bank"></div><div><label>Reference</label><input name="ref"></div></div><div class="actions"><button type="submit">Save Expense</button><button type="button" class="secondary hidden" id="cancelExpense">বাতিল</button></div></form><div id="expenseTable"></div></section>
@@ -99,9 +99,9 @@ function formObj(form){const o=Object.fromEntries(new FormData(form).entries());
 function upsert(store,obj){if(obj.id){const i=data[store].findIndex(x=>String(x.id)===String(obj.id));if(i>=0)data[store][i]={...data[store][i],...obj,id:data[store][i].id};else data[store].push({...obj,id:id(store)})}else data[store].push({...obj,id:id(store)});saveData();refresh()}
 function table(headers,rows){if(!rows.length)return '<p class="muted">এখনও কোনো তথ্য যোগ করা হয়নি।</p>';return '<div class="tablewrap"><table><thead><tr>'+headers.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+rows.join('')+'</tbody></table></div>'}
 function buttons(store,r){return `<td class="rowactions no-print"><button type="button" class="secondary" onclick="editItem('${store}','${r.id}')">Edit</button><button type="button" class="danger" onclick="deleteItem('${store}','${r.id}')">Delete</button></td>`}
-function renderCash(){let rows=[...data.cash].sort((a,b)=>a.date.localeCompare(b.date)).map(r=>'<tr><td>'+esc(r.date)+'</td><td>'+esc(r.name)+'</td><td>'+(r.type==='in'?money(r.amount):'0.00')+'</td><td>'+(r.type==='out'?money(r.amount):'0.00')+'</td>'+buttons('cash',r)+'</tr>');$('cashTable').innerHTML=table(['Date','Accounts Name','জমা (Credit)','খরচ (Debit)','Actions'],rows)}
+function renderCash(){let rows=[...data.cash].sort((a,b)=>a.date.localeCompare(b.date)).map(r=>'<tr><td>'+esc(r.date)+'</td><td>'+esc(r.name)+'</td><td>'+(r.type==='in'?money(r.amount):'0.00')+'</td><td>'+(r.type==='out'?money(r.amount):'0.00')+'</td>'+buttons('cash',r)+'</tr>');$('cashTable').innerHTML=table(['Date','Accounts Name','Credit / Deposit','Debit / Withdrawal','Actions'],rows)}
 function renderBanks(){let rows=data.banks.map(r=>'<tr><td>'+esc(r.bank)+'</td><td>'+esc(r.holder)+'</td><td>'+esc(r.account_number||'—')+'</td><td>'+esc(r.routing_number||'—')+'</td><td>'+money(r.opening_balance)+'</td>'+buttons('banks',r)+'</tr>');$('banksTable').innerHTML=table(['Bank Name','Account Holder','Account Number','Routing Number','Opening Balance','Actions'],rows)}
-function renderTxns(){let rows=[...data.txns].sort((a,b)=>a.date.localeCompare(b.date)).map(r=>{let b=data.banks.find(x=>x.id===r.account_id);return '<tr><td>'+esc(r.date)+'</td><td>'+esc(b?.bank||'Deleted bank')+'</td><td>'+esc(r.name)+'</td><td>'+(r.type==='in'?money(r.amount):'0.00')+'</td><td>'+(r.type==='out'?money(r.amount):'0.00')+'</td><td>'+money(runningBalance(r.account_id,r))+'</td>'+buttons('txns',r)+'</tr>'});$('txnTable').innerHTML=table(['Date','ব্যাংক','Accounts Name','Credit / জমা','Debit / উত্তোলন','Balance','Actions'],rows)}
+function renderTxns(){let rows=[...data.txns].sort((a,b)=>a.date.localeCompare(b.date)).map(r=>{let b=data.banks.find(x=>x.id===r.account_id);return '<tr><td>'+esc(r.date)+'</td><td>'+esc(b?.bank||'Deleted bank')+'</td><td>'+esc(r.name)+'</td><td>'+(r.type==='in'?money(r.amount):'0.00')+'</td><td>'+(r.type==='out'?money(r.amount):'0.00')+'</td><td>'+money(runningBalance(r.account_id,r))+'</td>'+buttons('txns',r)+'</tr>'});$('txnTable').innerHTML=table(['Date','Bank','Accounts Name','Credit / Deposit','Debit / Withdrawal','Balance','Actions'],rows)}
 function runningBalance(accountId,row){let b=data.banks.find(x=>x.id===accountId);let bal=Number(b?.opening_balance||0);const rows=data.txns.filter(x=>x.account_id===accountId).sort((a,c)=>a.date.localeCompare(c.date)||a.id.localeCompare(c.id));for(const x of rows){bal+=(x.type==='in'?1:-1)*Number(x.amount||0);if(x.id===row.id)return bal}return bal}
 function renderBalanceSheet(){
  const cutoff=$('dateTo')?.value||today();
@@ -135,6 +135,25 @@ function renderStatement(){
    html='<p><b>Account Holder:</b> '+esc(b.holder)+' &nbsp; <b>Account:</b> '+esc(b.account_number||'—')+' &nbsp; <b>Routing:</b> '+esc(b.routing_number||'—')+'</p><p><b>Statement Date:</b> '+esc(from||'শুরু থেকে')+' — '+esc(to)+'</p><div class="stats"><div class="stat">Opening Balance<b>'+money(opening)+'</b></div><div class="stat">Total Deposit<b>'+money(cr)+'</b></div><div class="stat">Total Withdrawal<b>'+money(dr)+'</b></div><div class="stat">Closing Balance<b>'+money(bal)+'</b></div></div>'+table(['Date','Accounts Name','Deposit','Withdrawal','Balance'],rows);
    lastPrintTitle=b.bank+' — Bank Statement';
   }
+ }else if(mode==='holder'){
+  const holderBanks=data.banks.filter(b=>holder!=='all'&&b.holder===holder);
+  if(holder==='all'){
+   html='<p class="muted">একজন Account Holder নির্বাচন করুন, তাহলে তাঁর সব ব্যাংক অ্যাকাউন্ট ও লেনদেন একসঙ্গে দেখা যাবে।</p>';
+  }else if(!holderBanks.length){
+   html='<p class="muted">এই Account Holder-এর কোনো ব্যাংক অ্যাকাউন্ট পাওয়া যায়নি।</p>';
+  }else{
+   let totalOpening=0,totalCredit=0,totalDebit=0,totalClosing=0,details='';
+   for(const b of holderBanks){
+    const opening=Number(b.opening_balance||0)+sum(data.txns.filter(x=>x.account_id===b.id&&from&&x.date<from).map(x=>(x.type==='in'?1:-1)*Number(x.amount||0)));
+    let bal=opening,cr=0,dr=0;
+    const tx=data.txns.filter(x=>x.account_id===b.id&&(!from||x.date>=from)&&x.date<=to).sort((a,c)=>a.date.localeCompare(c.date)||String(a.id).localeCompare(String(c.id)));
+    const rows=tx.map(x=>{const credit=x.type==='in'?Number(x.amount||0):0,debit=x.type==='out'?Number(x.amount||0):0;cr+=credit;dr+=debit;bal+=credit-debit;return '<tr><td>'+esc(x.date)+'</td><td>'+esc(x.name)+'</td><td>'+money(credit)+'</td><td>'+money(debit)+'</td><td>'+money(bal)+'</td></tr>';});
+    totalOpening+=opening;totalCredit+=cr;totalDebit+=dr;totalClosing+=bal;
+    details+='<h3>'+esc(b.bank)+' — Account: '+esc(b.account_number||'—')+'</h3><p><b>Routing:</b> '+esc(b.routing_number||'—')+' &nbsp; <b>Opening Balance:</b> '+money(opening)+' &nbsp; <b>Closing Balance:</b> '+money(bal)+'</p>'+table(['Date','Accounts Name','Deposit / Credit','Withdrawal / Debit','Balance'],rows);
+   }
+   html='<p><b>Account Holder:</b> '+esc(holder)+'</p><p><b>Statement Date:</b> '+esc(from||'শুরু থেকে')+' — '+esc(to)+'</p><div class="stats"><div class="stat">Accounts<b>'+holderBanks.length+'</b></div><div class="stat">Opening Balance<b>'+money(totalOpening)+'</b></div><div class="stat">Total Deposit<b>'+money(totalCredit)+'</b></div><div class="stat">Total Withdrawal<b>'+money(totalDebit)+'</b></div><div class="stat">Closing Balance<b>'+money(totalClosing)+'</b></div></div>'+details;
+  }
+  lastPrintTitle='Account Holder — '+(holder==='all'?'Select Holder':holder)+' — Full Statement';
  }else{
   const rows=chosen.map(b=>{
    const bal=Number(b.opening_balance||0)+sum(data.txns.filter(x=>x.account_id===b.id&&x.date<=to).map(x=>(x.type==='in'?1:-1)*Number(x.amount||0)));
