@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123b35"><title>LC Import & Wholesale Management Software</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f2f6f4;color:#172522;font:15px system-ui,sans-serif}header{background:#123b35;color:white;padding:18px}header h1{font-size:19px;margin:0 0 5px}main{max-width:900px;margin:auto;padding:13px}.card{background:white;border:1px solid #dce5e2;border-radius:13px;padding:14px;margin-bottom:13px}h2{font-size:17px;margin:0 0 12px}.muted{font-size:12px;color:#657571}.notice{background:#fff7d9;border:1px solid #e9d98f;padding:11px;border-radius:10px;margin-bottom:12px;font-size:13px}label{display:block;font-weight:650;font-size:13px;margin:9px 0 5px}input,select{width:100%;padding:11px;border:1px solid #cad7d2;border-radius:8px;font:inherit;background:white}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}button{border:0;background:#1c6557;color:white;border-radius:9px;padding:11px 13px;font-weight:650;font:inherit}.secondary{background:#e7efec;color:#123b35}.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:12px}.tabs button{white-space:nowrap;flex:none}.tabs .active{background:#123b35}.hidden{display:none!important}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.stat{background:#edf5f2;border-radius:9px;padding:11px}.stat b{display:block;font-size:18px;margin-top:4px}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px;min-width:500px}td,th{padding:8px;border-bottom:1px solid #dce5e2;text-align:left}th{background:#f4f7f6}.msg{padding:9px;background:#e8f7ee;border-radius:8px;margin-top:8px;font-size:13px}footer{text-align:center;color:#657571;font-size:11px;padding:12px}
+*{box-sizing:border-box}body{margin:0;background:#f2f6f4;color:#172522;font:15px system-ui,sans-serif}header{background:#123b35;color:white;padding:18px}header h1{font-size:19px;margin:0 0 5px}main{max-width:900px;margin:auto;padding:13px}.card{background:white;border:1px solid #dce5e2;border-radius:13px;padding:14px;margin-bottom:13px}h2{font-size:17px;margin:0 0 12px}.muted{font-size:12px;color:#657571}.notice{background:#fff7d9;border:1px solid #e9d98f;padding:11px;border-radius:10px;margin-bottom:12px;font-size:13px}label{display:block;font-weight:650;font-size:13px;margin:9px 0 5px}input,select{width:100%;padding:11px;border:1px solid #cad7d2;border-radius:8px;font:inherit;background:white}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}button{border:0;background:#1c6557;color:white;border-radius:9px;padding:11px 13px;font-weight:650;font:inherit}.secondary{background:#e7efec;color:#123b35}.danger{background:#c93443;color:#fff}.rowactions{white-space:nowrap}.rowactions button{padding:5px 8px;font-size:11px;margin:1px}.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:12px}.tabs button{white-space:nowrap;flex:none}.tabs .active{background:#123b35}.hidden{display:none!important}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.stat{background:#edf5f2;border-radius:9px;padding:11px}.stat b{display:block;font-size:18px;margin-top:4px}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px;min-width:500px}td,th{padding:8px;border-bottom:1px solid #dce5e2;text-align:left}th{background:#f4f7f6}.msg{padding:9px;background:#e8f7ee;border-radius:8px;margin-top:8px;font-size:13px}footer{text-align:center;color:#657571;font-size:11px;padding:12px}
 
 #printArea{display:none}
 @media print{
@@ -18,6 +18,9 @@
  #printArea table{width:100%!important;min-width:0!important;border-collapse:collapse!important;font-size:9pt!important}
  #printArea th,#printArea td{border:1px solid #555!important;padding:5px 6px!important;text-align:left!important;background:#fff!important;color:#111!important;overflow-wrap:anywhere}
  #printArea th{font-weight:bold!important}
+ #printArea .stat{display:inline-block!important;vertical-align:top;width:24%;border:1px solid #777!important;background:#fff!important;color:#111!important}
+ #printArea .stats{display:block!important}
+ #printArea h3{page-break-after:avoid}
  #printArea .tablewrap{overflow:visible!important}
  #printArea p{font-size:10pt}
  .no-print{display:none!important}
@@ -70,11 +73,7 @@
 </div>
 <div class="actions"><button>Save Bank Transaction</button></div>
 </form>
-<div class="grid no-print" style="margin-top:14px">
-<div><label>Print From Date</label><input id="bankFrom" type="date"></div>
-<div><label>Print To Date</label><input id="bankTo" type="date"></div><div><label>Account Holder</label><input id="holderFilter" placeholder="Holder অনুযায়ী খুঁজুন"></div>
-<div style="align-self:end"><button type="button" class="secondary" id="filterBankDates">Apply Date Filter</button></div>
-</div>
+<div class="card no-print" style="margin-top:14px;background:#f7fafc"><h3>Bank Statement / Account Balance Sheet Download</h3><div class="grid"><div><label>Statement Type</label><select id="statementMode"><option value="single">একটি ব্যাংকের স্টেটমেন্ট</option><option value="all">সব ব্যাংকের একদিনের হিসাব</option></select></div><div><label>Bank Account</label><select id="statementBank"><option value="all">সব ব্যাংক</option></select></div><div><label>Account Holder</label><select id="statementHolder"><option value="all">সব Account Holder</option></select></div><div><label>তারিখ (শুরু)</label><input id="bankFrom" type="date"></div><div><label>তারিখ (শেষ)</label><input id="bankTo" type="date"></div></div><div class="actions"><button type="button" id="filterBankDates">স্টেটমেন্ট দেখুন</button><button type="button" class="secondary" id="printBankStatement">Print / Save PDF</button></div><p class="muted">একটি ব্যাংক বাছলে প্রথম ছবির মতো Debit, Credit ও Running Balance-সহ স্টেটমেন্ট হবে। “সব ব্যাংকের একদিনের হিসাব” বাছলে দ্বিতীয় ছবির মতো ব্যাংকভিত্তিক Balance Sheet হবে।</p></div>
 <div id="bankTransactionList"></div>
 <div class="actions no-print"><button type="button" class="secondary" onclick="printSection('pane-banktx')">Print Selected Dates / Save PDF</button></div>
 </div>
@@ -109,17 +108,17 @@ function safe(x){return String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&
 function obj(f){return Object.fromEntries(new FormData(f).entries())}
 function add(x){return {...x,id:x.id||crypto.randomUUID(),scope:scope(),createdAt:new Date().toISOString()}}
 function msg(id,t){$(id).innerHTML='<div class="msg">'+safe(t)+'</div>'}
-function table(rows,cols){if(!rows.length)return '<p class="muted">এখনও কোনো রেকর্ড নেই।</p>';return '<div class="tablewrap"><table><thead><tr>'+cols.map(c=>'<th>'+c[1]+'</th>').join('')+'</tr></thead><tbody>'+rows.slice().reverse().map(r=>'<tr>'+cols.map(c=>'<td>'+safe(c[2]?c[2](r):(r[c[0]]??''))+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>'}
+function table(rows,cols,store){if(!rows.length)return '<p class="muted">এখনও কোনো রেকর্ড নেই।</p>';return '<div class="tablewrap"><table><thead><tr>'+cols.map(c=>'<th>'+c[1]+'</th>').join('')+(store?'<th class="no-print">Action</th>':'')+'</tr></thead><tbody>'+rows.slice().reverse().map(r=>'<tr>'+cols.map(c=>'<td>'+safe(c[2]?c[2](r):(r[c[0]]??''))+'</td>').join('')+(store?'<td class="no-print rowactions"><button type="button" onclick="editRecord(\''+store+'\',\''+r.id+'\')">Edit</button> <button type="button" class="danger" onclick="deleteRecord(\''+store+'\',\''+r.id+'\')">Delete</button></td>':'')+'</tr>').join('')+'</tbody></table></div>'}
 async function refresh(){
 let [cash,banks,bt,exp,stock,parties]=await Promise.all(stores.map(all));
-$('cashList').innerHTML=table(cash,[['date','Date'],['name','Particulars'],['type','Type',r=>r.type==='in'?'জমা':'খরচ'],['amount','Amount',r=>money(r.amount)],['ref','Reference']]);
+$('cashList').innerHTML=table(cash,[['date','Date'],['name','Particulars'],['type','Type',r=>r.type==='in'?'জমা':'খরচ'],['amount','Amount',r=>money(r.amount)],['ref','Reference']],'cash');
 $('bankSelect').innerHTML=banks.map(b=>'<option value="'+safe(b.id)+'">'+safe(b.bank+' — '+b.holder+' '+(b.account_number||''))+'</option>').join('');
-$('bankAccountsList').innerHTML=table(banks,[['bank','Bank Name'],['holder','Account Holder'],['account_number','Account Number'],['routing_number','Routing Number'],['opening_balance','Opening Balance',r=>money(r.opening_balance)]]);
+$('bankAccountsList').innerHTML=table(banks,[['bank','Bank Name'],['holder','Account Holder'],['account_number','Account Number'],['routing_number','Routing Number'],['opening_balance','Opening Balance',r=>money(r.opening_balance)]],'bank');
 $('allBankBalances').innerHTML=table(banks.map(b=>({...b,credit:bt.filter(t=>t.account_id===b.id&&t.type==='in').reduce((n,t)=>n+Number(t.amount||0),0),debit:bt.filter(t=>t.account_id===b.id&&t.type==='out').reduce((n,t)=>n+Number(t.amount||0),0),balance:Number(b.opening_balance||0)+bt.filter(t=>t.account_id===b.id).reduce((n,t)=>n+(t.type==='in'?1:-1)*Number(t.amount||0),0)})),[['bank','Bank'],['holder','Account Holder'],['account_number','Account No.'],['credit','Total Credit',r=>money(r.credit)],['debit','Total Debit',r=>money(r.debit)],['balance','Closing Balance',r=>money(r.balance)]]);
 renderBankTransactions(bt,banks);
-$('partyList').innerHTML=table(parties,[['date','Date'],['name','Party / Account Holder'],['type','Type',r=>r.type==='payable'?'Payable':'Receivable'],['amount','Amount',r=>money(r.amount)],['note','Description']]);
-$('expenseList').innerHTML=table(exp,[['date','Date'],['name','Expense'],['method','Method'],['amount','Amount',r=>money(r.amount)]]);
-$('stockList').innerHTML=table(stock,[['date','Date'],['name','Item'],['code','Code'],['type','Movement'],['qty','Qty'],['price','Unit Price',r=>money(r.price)]]);
+$('partyList').innerHTML=table(parties,[['date','Date'],['name','Party / Account Holder'],['type','Type',r=>r.type==='payable'?'Payable':'Receivable'],['amount','Amount',r=>money(r.amount)],['note','Description']],'parties');
+$('expenseList').innerHTML=table(exp,[['date','Date'],['name','Expense'],['method','Method'],['amount','Amount',r=>money(r.amount)]],'expenses');
+$('stockList').innerHTML=table(stock,[['date','Date'],['name','Item'],['code','Code'],['type','Movement'],['qty','Qty'],['price','Unit Price',r=>money(r.price)]],'stock');
 $('cashbal').textContent=money(cash.reduce((n,r)=>n+(r.type==='in'?1:-1)*Number(r.amount),0));
 $('bankbal').textContent=money(banks.reduce((n,r)=>n+Number(r.opening_balance||0),0)+bt.reduce((n,r)=>n+(r.type==='in'?1:-1)*Number(r.amount),0));
 $('exptotal').textContent=money(exp.reduce((n,r)=>n+Number(r.amount||0),0));
@@ -139,24 +138,50 @@ $('calcStockValue').textContent=money(stockValue);$('calcBankCredit').textConten
 }
 async function renderBankTransactions(bt,banks){
  const from=$('bankFrom')?.value||'', to=$('bankTo')?.value||'';
- const accountId=$('bankSelect')?.value||'';
- const chosenBank=banks.find(b=>b.id===accountId);
- const selected=bt.filter(r=>(!accountId||r.account_id===accountId)&&(!from||r.date>=from)&&(!to||r.date<=to)).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
- const accountMap=Object.fromEntries(banks.map(b=>[b.id,b]));
- let running=Number(chosenBank?.opening_balance||0);
- const rows=selected.map(r=>{
-   running+=(r.type==='in'?1:-1)*Number(r.amount||0);
-   return {...r,debit:r.type==='out'?Number(r.amount||0):0,credit:r.type==='in'?Number(r.amount||0):0,balance:running,accountName:accountMap[r.account_id]?.bank||''};
- });
- const holderTerm=($('holderFilter')?.value||'').trim().toLowerCase();
- const visibleRows=rows.filter(r=>!holderTerm||(chosenBank?.holder||'').toLowerCase().includes(holderTerm));
- const totalDebit=visibleRows.reduce((n,r)=>n+r.debit,0),totalCredit=visibleRows.reduce((n,r)=>n+r.credit,0);
- let body=visibleRows.length?'<div class="tablewrap"><table><thead><tr><th>Date</th><th>Particulars</th><th>Debit</th><th>Credit</th><th>Balance</th><th class="no-print">Action</th></tr></thead><tbody>'+visibleRows.slice().reverse().map(r=>'<tr><td>'+safe(r.date)+'</td><td>'+safe(r.name)+'</td><td>'+money(r.debit)+'</td><td>'+money(r.credit)+'</td><td>'+money(r.balance)+'</td><td class="no-print"><button type="button" onclick="editBankTxn(\''+r.id+'\')">Edit</button> <button type="button" class="danger" onclick="deleteBankTxn(\''+r.id+'\')">Delete</button></td></tr>').join('')+'</tbody></table></div>':'<p class="muted">কোনো লেনদেন পাওয়া যায়নি।</p>';
- $('bankTransactionList').innerHTML='<h3>Bank Transactions — Date-wise Statement</h3><p>Bank: <b>'+safe(chosenBank?.bank||'সব ব্যাংক')+'</b> · Account Holder: <b>'+safe(chosenBank?.holder||'সব')+'</b> · Account No.: '+safe(chosenBank?.account_number||'—')+'</p><p class="muted">Date range: '+safe(from||'শুরু থেকে')+' — '+safe(to||'আজ পর্যন্ত')+'</p><div class="stats"><div class="stat">Opening Balance<b>'+money(chosenBank?.opening_balance||0)+'</b></div><div class="stat">Total Credit<b>'+money(totalCredit)+'</b></div><div class="stat">Total Debit<b>'+money(totalDebit)+'</b></div><div class="stat">Closing Balance<b>'+money((Number(chosenBank?.opening_balance||0))+totalCredit-totalDebit)+'</b></div></div>'+body;
+ const reportBank=$('statementBank')?.value||'all';
+ const holder=$('statementHolder')?.value||'all';
+ const mode=$('statementMode')?.value||'single';
+ const bankMap=Object.fromEntries(banks.map(b=>[b.id,b]));
+ $('statementBank').innerHTML='<option value="all">সব ব্যাংক</option>'+banks.map(b=>'<option value="'+safe(b.id)+'">'+safe(b.bank+' — '+b.holder+' '+(b.account_number||''))+'</option>').join('');
+ if(!banks.some(b=>b.id===reportBank) && reportBank!=='all') $('statementBank').value='all';
+ const holders=[...new Set(banks.map(b=>b.holder).filter(Boolean))];
+ const oldHolder=holder;
+ $('statementHolder').innerHTML='<option value="all">সব Account Holder</option>'+holders.map(h=>'<option value="'+safe(h)+'">'+safe(h)+'</option>').join('');
+ if(holders.includes(oldHolder)) $('statementHolder').value=oldHolder; else $('statementHolder').value='all';
+ const selectedBankId=$('statementBank').value;
+ const chosenBank=banks.find(b=>b.id===selectedBankId);
+ const eligibleBanks=banks.filter(b=>(selectedBankId==='all'||b.id===selectedBankId)&&($('statementHolder').value==='all'||b.holder===$('statementHolder').value));
+ const selected=bt.filter(r=>eligibleBanks.some(b=>b.id===r.account_id)&&(!from||r.date>=from)&&(!to||r.date<=to)).sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.createdAt||'').localeCompare(b.createdAt||''));
+ const holderTerm=$('statementHolder').value;
+ if(mode==='all' || selectedBankId==='all'){
+   const rows=eligibleBanks.map(b=>{
+     const tx=bt.filter(t=>t.account_id===b.id);
+     const before=tx.filter(t=>from&&t.date<from).reduce((n,t)=>n+(t.type==='in'?1:-1)*Number(t.amount||0),0);
+     const within=tx.filter(t=>(!from||t.date>=from)&&(!to||t.date<=to));
+     const credit=within.filter(t=>t.type==='in').reduce((n,t)=>n+Number(t.amount||0),0);
+     const debit=within.filter(t=>t.type==='out').reduce((n,t)=>n+Number(t.amount||0),0);
+     const opening=Number(b.opening_balance||0)+before;
+     return {...b,opening,credit,debit,closing:opening+credit-debit};
+   });
+   const grand=rows.reduce((a,r)=>({opening:a.opening+r.opening,credit:a.credit+r.credit,debit:a.debit+r.debit,closing:a.closing+r.closing}),{opening:0,credit:0,debit:0,closing:0});
+   $('bankTransactionList').innerHTML='<h3>সব ব্যাংকের Account Balance Sheet</h3><p><b>Company:</b> '+safe($('cname').value.trim()||'Hili Impex')+' · <b>Account Holder:</b> '+safe(holderTerm==='all'?'সব Account Holder':holderTerm)+'</p><p><b>Statement Date:</b> '+safe(from||'শুরু থেকে')+' — '+safe(to||'বর্তমান পর্যন্ত')+'</p>'+table(rows,[['bank','Bank Name'],['routing_number','Routing Number'],['holder','Account Holder'],['account_number','Account No.'],['opening','Opening Balance',r=>money(r.opening)],['credit','Total Credit',r=>money(r.credit)],['debit','Total Debit',r=>money(r.debit)],['closing','Closing Balance',r=>money(r.closing)]])+ (rows.length?'<div class="tablewrap"><table><tbody><tr><th colspan="4">সর্বমোট (Grand Total)</th><th>'+money(grand.opening)+'</th><th>'+money(grand.credit)+'</th><th>'+money(grand.debit)+'</th><th>'+money(grand.closing)+'</th></tr></tbody></table></div>':'');
+ }else{
+   const txAll=bt.filter(r=>r.account_id===chosenBank.id).sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.createdAt||'').localeCompare(b.createdAt||''));
+   let running=Number(chosenBank.opening_balance||0);
+   txAll.forEach(t=>{if(from&&t.date<from)running+=(t.type==='in'?1:-1)*Number(t.amount||0)});
+   const opening=running;
+   const visible=txAll.filter(r=>(!from||r.date>=from)&&(!to||r.date<=to));
+   let totalDebit=0,totalCredit=0;
+   const rows=visible.map(r=>{const debit=r.type==='out'?Number(r.amount||0):0,credit=r.type==='in'?Number(r.amount||0):0;totalDebit+=debit;totalCredit+=credit;running+=credit-debit;return {...r,debit,credit,balance:running}});
+   const body=rows.length?'<div class="tablewrap"><table><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>জমা (Credit)</th><th>উত্তোলন (Debit)</th><th>Debit</th><th>Credit</th><th>Balance</th><th class="no-print">Action</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+safe(r.date)+'</td><td>'+safe(r.name)+'</td><td>'+money(r.credit)+'</td><td>'+money(r.debit)+'</td><td>'+money(r.debit)+'</td><td>'+money(r.credit)+'</td><td>'+money(r.balance)+'</td><td class="no-print rowactions"><button type="button" onclick="editBankTxn(\''+r.id+'\')">Edit</button> <button type="button" class="danger" onclick="deleteBankTxn(\''+r.id+'\')">Delete</button></td></tr>').join('')+'</tbody></table></div>':'<p class="muted">নির্বাচিত তারিখে কোনো লেনদেন নেই।</p>';
+   $('bankTransactionList').innerHTML='<h3>Bank Statement / ব্যাংক লেনদেন রিপোর্ট</h3><p><b>Bank:</b> '+safe(chosenBank.bank)+' · <b>Routing Number:</b> '+safe(chosenBank.routing_number||'—')+'</p><p><b>Account Holder:</b> '+safe(chosenBank.holder)+' · <b>Account No.:</b> '+safe(chosenBank.account_number||'—')+'</p><p><b>Date:</b> '+safe(from||'শুরু থেকে')+' — '+safe(to||'বর্তমান পর্যন্ত')+'</p><div class="stats"><div class="stat">Opening Balance<b>'+money(opening)+'</b></div><div class="stat">Total Credit<b>'+money(totalCredit)+'</b></div><div class="stat">Total Debit<b>'+money(totalDebit)+'</b></div><div class="stat">Closing Balance<b>'+money(opening+totalCredit-totalDebit)+'</b></div></div>'+body;
+ }
 }
 
 window.editBankTxn=async id=>{let rows=await all('banktx'),r=rows.find(x=>x.id===id);if(!r)return;let name=prompt('Particulars / Description',r.name);if(name===null)return;let amount=prompt('Amount',r.amount);if(amount===null)return;let date=prompt('Date (YYYY-MM-DD)',r.date);if(date===null)return;let type=prompt('Type লিখুন in অথবা out',r.type);if(type===null)return;if(!['in','out'].includes(type)||!Number.isFinite(Number(amount))||Number(amount)<=0){alert('Type বা Amount সঠিক নয়');return}await put('banktx',{...r,name,amount:Number(amount),date,type});await refresh()};
 window.deleteBankTxn=async id=>{if(!confirm('এই Bank Transaction মুছে ফেলবেন?'))return;await new Promise((ok,no)=>{let q=db.transaction('banktx','readwrite').objectStore('banktx').delete(id);q.onsuccess=ok;q.onerror=()=>no(q.error)});await refresh()};
+window.editRecord=async(store,id)=>{const rows=await all(store),r=rows.find(x=>x.id===id);if(!r)return;const fields=store==='bank'?['bank','holder','account_number','routing_number','opening_balance']:store==='cash'?['date','name','type','amount','ref','note']:store==='expenses'?['date','name','amount','method','ref']:store==='stock'?['date','name','code','type','qty','price']:['date','name','type','amount','note'];const updated={...r};for(const key of fields){let val=prompt(({bank:'Bank Name',holder:'Account Holder',account_number:'Account Number',routing_number:'Routing Number',opening_balance:'Opening Balance',date:'Date YYYY-MM-DD',name:'Particulars / Name',type:'Type (cash/stock: in or out; party: payable or receivable)',amount:'Amount',ref:'Reference',note:'Note',method:'Method',code:'Code',qty:'Quantity',price:'Unit Price'}[key]||key),r[key]??'');if(val===null)return;if(['amount','qty','price','opening_balance'].includes(key)){if(val.trim()!==''&&!Number.isFinite(Number(val))){alert('সংখ্যা সঠিক নয়');return}updated[key]=Number(val||0)}else updated[key]=val;}if(store==='cash'||store==='stock'){if(!['in','out'].includes(updated.type)){alert('Type in অথবা out দিন');return}}if(store==='parties'&&!['payable','receivable'].includes(updated.type)){alert('Type payable অথবা receivable দিন');return}await put(store,updated);await refresh();alert('পরিবর্তন Save হয়েছে এবং হিসাব পুনরায় গণনা হয়েছে।')};
+window.deleteRecord=async(store,id)=>{if(!confirm('এই রেকর্ডটি স্থায়ীভাবে মুছে ফেলবেন?'))return;await new Promise((ok,no)=>{const q=db.transaction(store,'readwrite').objectStore(store).delete(id);q.onsuccess=ok;q.onerror=()=>no(q.error)});await refresh();alert('রেকর্ড মুছে ফেলা হয়েছে; হিসাব পুনরায় গণনা হয়েছে।')};
 function bind(form,store){$(form).addEventListener('submit',async e=>{e.preventDefault();try{let x=obj(e.target);['amount','qty','price','opening_balance'].forEach(k=>{if(x[k]!==undefined)x[k]=Number(x[k]||0)});await put(store,add(x));e.target.reset();e.target.querySelectorAll('input[type=date]').forEach(i=>i.value=today());await refresh();alert('সফলভাবে Save হয়েছে।')}catch(err){alert('Save error: '+err.message)}})}
 $('ptype').onchange=()=>{$('companyFields').classList.toggle('hidden',$('ptype').value==='personal');$('role').innerHTML=$('ptype').value==='personal'?'<option value="owner">Personal Owner</option>':'<option value="admin">Company Admin</option><option value="employee">Company Employee</option>'};$('ptype').dispatchEvent(new Event('change'));
 $('enter').onclick=async()=>{let name=$('pname').value.trim(),type=$('ptype').value,code=$('ccode').value.trim(),companyName=$('cname').value.trim();if(!name){msg('loginMsg','নাম লিখুন।');return}if(type==='company'&&(!code||!companyName)){msg('loginMsg','Company Name ও Code লিখুন।');return}const identityKey='lc_offline_profile_'+(type==='personal'?'personal:'+name.trim().toLowerCase():'company:'+code.trim().toUpperCase());
@@ -168,6 +193,7 @@ $('switch').onclick=()=>{profile=null;$('app').classList.add('hidden');$('login'
 $('tabs').onclick=e=>{let b=e.target.closest('[data-tab]');if(!b)return;document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.pane').forEach(x=>x.classList.toggle('hidden',x.id!=='pane-'+b.dataset.tab))};
 ['cashForm','bankForm','bankTxnForm','expenseForm','stockForm','partyForm'].forEach(id=>{let f=$(id);if(f)f.querySelectorAll('input[type=date]').forEach(i=>i.value=today())});
 bind('cashForm','cash');bind('bankForm','bank');bind('bankTxnForm','banktx');bind('expenseForm','expenses');bind('stockForm','stock');bind('partyForm','parties');
+$('filterBankDates').onclick=async()=>{await refresh()};$('statementMode').onchange=async()=>{if($('statementMode').value==='all')$('statementBank').value='all';await refresh()};$('statementBank').onchange=async()=>{if($('statementBank').value!=='all')$('statementMode').value='single';await refresh()};$('statementHolder').onchange=async()=>{await refresh()};$('printBankStatement').onclick=()=>printSection('pane-banktx');
 $('backup').onclick=async()=>{let data={format:'lc-offline-backup-v1',profile:{type:profile.type,code:profile.code,companyName:profile.companyName},exportedAt:new Date().toISOString(),stores:{}};for(let s of stores)data.stores[s]=await all(s);let a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.href=u;a.download='lc-backup-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
 $('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{try{let data=JSON.parse(await e.target.files[0].text());if(data.format!=='lc-offline-backup-v1')throw Error('Backup format সঠিক নয়');if(data.profile.type!==profile.type)throw Error('Account type মিলছে না');if(profile.type==='company'&&String(data.profile.code).toUpperCase()!==profile.code.toUpperCase())throw Error('Company Code মিলছে না');let n=0;for(let s of stores)for(let r of (data.stores[s]||[])){await put(s,{...r,scope:scope()});n++}await refresh();msg('report','Import complete: '+n+'টি record যোগ/আপডেট হয়েছে')}catch(err){msg('report',err.message)}e.target.value=''};
 $('csv').onclick=async()=>{let lines=['section,date,name,type,amount,note'];for(let s of stores)for(let r of await all(s))lines.push([s,r.date||'',r.name||r.bank||r.lc_no||'',r.type||'',r.amount??r.opening_balance??'',r.note||''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));let a=document.createElement('a'),u=URL.createObjectURL(new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}));a.href=u;a.download='lc-records.csv';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
