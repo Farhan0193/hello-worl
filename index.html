@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123b35"><title>LC Import & Wholesale Management Software</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f6f4;color:#172522;font:15px system-ui,sans-serif}header{background:#123b35;color:white;padding:18px}header h1{font-size:19px;margin:0 0 5px}main{max-width:900px;margin:auto;padding:13px}.card{background:white;border:1px solid #dce5e2;border-radius:13px;padding:14px;margin-bottom:13px}h2{font-size:17px;margin:0 0 12px}.muted{font-size:12px;color:#657571}.notice{background:#fff7d9;border:1px solid #e9d98f;padding:11px;border-radius:10px;margin-bottom:12px;font-size:13px}label{display:block;font-weight:650;font-size:13px;margin:9px 0 5px}input,select{width:100%;padding:11px;border:1px solid #cad7d2;border-radius:8px;font:inherit;background:white}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}button{border:0;background:#1c6557;color:white;border-radius:9px;padding:11px 13px;font-weight:650;font:inherit}.secondary{background:#e7efec;color:#123b35}.tabs{display:flex;gap:7px;overflow:auto;margin-bottom:12px}.tabs button{white-space:nowrap;flex:none}.tabs .active{background:#123b35}.hidden{display:none!important}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.stat{background:#edf5f2;border-radius:9px;padding:11px}.stat b{display:block;font-size:18px;margin-top:4px}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px;min-width:500px}td,th{padding:8px;border-bottom:1px solid #dce5e2;text-align:left}th{background:#f4f7f6}.msg{padding:9px;background:#e8f7ee;border-radius:8px;margin-top:8px;font-size:13px}footer{text-align:center;color:#657571;font-size:11px;padding:12px}
+
+#printArea{display:none}
+@media print{
+ @page{size:A4 portrait;margin:12mm}
+ body{background:#fff!important;color:#111!important;font-family:Arial,sans-serif!important;font-size:11pt!important}
+ body *{visibility:hidden!important}
+ #printArea,#printArea *{visibility:visible!important}
+ #printArea{display:block!important;position:absolute;left:0;top:0;width:100%;padding:0!important;margin:0!important;background:#fff!important}
+ #printArea .print-head{text-align:center;border-bottom:1px solid #333;padding:0 0 8px;margin-bottom:12px}
+ #printArea .print-head h1{font-size:17pt;margin:0 0 4px;font-weight:700}
+ #printArea .print-head .sub{font-size:9pt;margin:2px 0}
+ #printArea h2{font-size:13pt;text-align:center;margin:10px 0}
+ #printArea h3{font-size:11pt;margin:12px 0 5px}
+ #printArea table{width:100%!important;min-width:0!important;border-collapse:collapse!important;font-size:9pt!important}
+ #printArea th,#printArea td{border:1px solid #555!important;padding:5px 6px!important;text-align:left!important;background:#fff!important;color:#111!important;overflow-wrap:anywhere}
+ #printArea th{font-weight:bold!important}
+ #printArea .tablewrap{overflow:visible!important}
+ #printArea p{font-size:10pt}
+ .no-print{display:none!important}
+}
+</style></head><body>
+<header><h1>LC Import & Wholesale Management</h1><div class="muted" style="color:#d4e6e1">Offline Edition • Local Database</div></header>
+<main><div id="printArea"></div>
+<div class="card no-print" id="topPrintBar" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+  <div><b>Print Report / PDF</b><div class="muted">প্রথমে Cash Book, Bank, Expenses, Stock, Auto Calculation বা Reports খুলুন</div></div>
+  <button type="button" id="printActiveBtn">Print / Save PDF</button>
+</div>
+
+<section id="login" class="card"><h2>Profile নির্বাচন</h2><label>নাম</label><input id="pname" placeholder="আপনার নাম"><label>Account Type</label><select id="ptype"><option value="personal">Personal Account</option><option value="company">Company Account</option></select><div id="companyFields"><label>Company Name</label><input id="cname" placeholder="কোম্পানির নাম"><label>Company Code (একই কোম্পানির জন্য একই কোড)</label><input id="ccode" placeholder="যেমন LC-1234"></div><label>Role</label><select id="role"><option value="admin">Company Admin / Personal Owner</option><option value="employee">Company Employee</option></select><div class="actions"><button id="enter">প্রবেশ করুন</button></div><div id="loginMsg"></div></section>
+<section id="app" class="hidden"><div class="card"><h2 id="welcome">Dashboard</h2><div id="ctx" class="muted"></div><div class="stats"><div class="stat">Cash Balance<b id="cashbal">৳0.00</b></div><div class="stat">Bank Balance<b id="bankbal">৳0.00</b></div><div class="stat">Expenses<b id="exptotal">৳0.00</b></div><div class="stat">Stock Items<b id="stockcount">0</b></div></div><div class="actions"><button class="secondary" id="switch">Profile বদলান</button></div></div>
+<div class="tabs" id="tabs"><button class="active" data-tab="cash">Cash Book</button>
+<button data-tab="bank">Bank Accounts</button>
+<button data-tab="banktx">Bank Transactions</button>
+<button data-tab="expenses">Expenses</button>
+<button data-tab="stock">Stock</button>
+<button data-tab="calc">Auto Calculation</button>
+<button data-tab="parties">Payable / Receivable</button>
+<button data-tab="reports">Reports / Backup</button></div>
+<div class="card pane" id="pane-cash"><h2>Cash Book</h2><form id="cashForm"><div class="grid"><div><label>Date</label><input name="date" type="date" required></div><div><label>Type</label><select name="type"><option value="in">জমা</option><option value="out">খরচ</option></select></div><div><label>Amount</label><input name="amount" type="number" min=".01" step=".01" required></div><div><label>Particulars</label><input name="name" required></div><div><label>Reference</label><input name="ref"></div><div><label>Note</label><input name="note"></div></div><div class="actions"><button>Save Cash Entry</button></div></form><div id="cashList"></div><div class="actions no-print"><button type="button" class="secondary" onclick="printSection('pane-cash')">Print / Save PDF</button></div></div>
+<div class="card pane hidden" id="pane-bank">
+<h2>Bank Accounts</h2>
+<form id="bankForm">
+<div class="grid">
+<div><label>Bank Name</label><input name="bank" required></div>
+<div><label>Account Holder</label><input name="holder" required></div>
+<div><label>Account Number</label><input name="account_number"></div>
+<div><label>Routing Number</label><input name="routing_number"></div>
+<div><label>Opening Balance</label><input name="opening_balance" type="number" step=".01" value="0"></div>
+</div>
+<div class="actions"><button>Save Bank Account</button></div>
+</form>
+<div id="bankAccountsList"></div><h3>সব ব্যাংকের Account Balance Sheet</h3><div id="allBankBalances"></div>
+<div class="actions no-print"><button type="button" class="secondary" onclick="printSection('pane-bank')">Print / Save PDF</button></div>
+</div>
+
+<div class="card pane hidden" id="pane-banktx">
+<h2>Bank Transactions</h2>
+<form id="bankTxnForm">
+<div class="grid">
+<div><label>Bank Account</label><select id="bankSelect" name="account_id" required></select></div>
+<div><label>Date</label><input name="date" type="date" required></div>
+<div><label>Particulars / Description</label><input name="name" required></div>
+<div><label>Transaction Type</label><select name="type"><option value="in">Credit / জমা</option><option value="out">Debit / উত্তোলন</option></select></div>
+<div><label>Amount</label><input name="amount" type="number" min=".01" step=".01" required></div>
+<div><label>Reference / Cheque No.</label><input name="ref"></div>
+</div>
+<div class="actions"><button>Save Bank Transaction</button></div>
+</form>
+<div class="grid no-print" style="margin-top:14px">
+<div><label>Print From Date</label><input id="bankFrom" type="date"></div>
+<div><label>Print To Date</label><input id="bankTo" type="date"></div><div><label>Account Holder</label><input id="holderFilter" placeholder="Holder অনুযায়ী খুঁজুন"></div>
+<div style="align-self:end"><button type="button" class="secondary" id="filterBankDates">Apply Date Filter</button></div>
+</div>
+<div id="bankTransactionList"></div>
+<div class="actions no-print"><button type="button" class="secondary" onclick="printSection('pane-banktx')">Print Selected Dates / Save PDF</button></div>
+</div>
+<div class="card pane hidden" id="pane-expenses"><h2>Expenses</h2><form id="expenseForm"><div class="grid"><div><label>Date</label><input name="date" type="date" required></div><div><label>Expense Name</label><input name="name" required></div><div><label>Amount</label><input name="amount" type="number" min=".01" step=".01" required></div><div><label>Method</label><select name="method"><option>Cash</option><option>Bank</option><option>Other</option></select></div><div><label>Reference</label><input name="ref"></div></div><div class="actions"><button>Save Expense</button></div></form><div id="expenseList"></div><div class="actions no-print"><button type="button" class="secondary" onclick="printSection('pane-expenses')">Print / Save PDF</button></div></div>
+<div class="card pane hidden" id="pane-stock"><h2>Godown / Stock</h2><form id="stockForm"><div class="grid"><div><label>Date</label><input name="date" type="date" required></div><div><label>Item Name</label><input name="name" required></div><div><label>Code</label><input name="code"></div><div><label>Movement</label><select name="type"><option value="in">Stock In</option><option value="out">Stock Out</option></select></div><div><label>Quantity</label><input name="qty" type="number" min=".001" step=".001" required></div><div><label>Unit Price</label><input name="price" type="number" min="0" step=".01" value="0"></div></div><div class="actions"><button>Save Stock Entry</button></div></form><div id="stockList"></div><div class="actions no-print"><button type="button" class="secondary" onclick="printSection('pane-stock')">Print / Save PDF</button></div></div>
+<div class="card pane hidden" id="pane-calc">
+<h2>Auto Calculation / হিসাবের সারাংশ</h2>
+<div class="stats">
+<div class="stat">Cash In<b id="calcCashIn">৳0.00</b></div>
+<div class="stat">Cash Out<b id="calcCashOut">৳0.00</b></div>
+<div class="stat">Cash Balance<b id="calcCashNet">৳0.00</b></div>
+<div class="stat">Bank Balance<b id="calcBankNet">৳0.00</b></div>
+<div class="stat">Total Expenses<b id="calcExpenses">৳0.00</b></div>
+<div class="stat">Stock Quantity<b id="calcStockQty">0</b></div>
+<div class="stat">Stock Value (estimated)<b id="calcStockValue">৳0.00</b></div>
+<div class="stat">Total Bank Credit<b id="calcBankCredit">৳0.00</b></div>
+<div class="stat">Total Bank Debit<b id="calcBankDebit">৳0.00</b></div>
+</div>
+<p class="muted">নতুন এন্ট্রি Save করলে এই হিসাব স্বয়ংক্রিয়ভাবে আপডেট হবে। Stock Value = Quantity × Unit Price-এর আনুমানিক হিসাব।</p>
+<div class="actions no-print"><button type="button" class="secondary" onclick="printSection('pane-calc')">Print / Save PDF</button></div>
+</div>
+<div class="card pane hidden" id="pane-parties"><h2>Payable / Receivable হিসাব</h2><form id="partyForm"><div class="grid"><div><label>তারিখ</label><input name="date" type="date" required></div><div><label>Account Holder / Party Name</label><input name="name" required></div><div><label>ধরন</label><select name="type"><option value="receivable">Receivable (পাওনা)</option><option value="payable">Payable (দেনা)</option></select></div><div><label>Amount</label><input name="amount" type="number" min=".01" step=".01" required></div><div><label>বিবরণ</label><input name="note"></div></div><div class="actions no-print"><button>Save Entry</button></div></form><div id="partyList"></div><div class="actions no-print"><button type="button" onclick="printSection('pane-parties')">Print / Save PDF</button></div></div>
+<div class="card pane hidden" id="pane-reports"><h2>Reports & Backup</h2><p class="muted">JSON Backup/Import এই Profile বা Company Code-এর রেকর্ড নিয়ে কাজ করে। Import করলে একই ID-র রেকর্ড আপডেট হয়।</p><div class="actions"><button id="backup">Download JSON Backup</button><button class="secondary" id="importBtn">Import JSON Backup</button><input class="hidden" id="importFile" type="file" accept=".json,application/json"><button class="secondary" id="csv">Export CSV</button><button class="secondary" onclick="printSection('pane-reports')">Print / Save PDF</button></div><div id="report"></div></div></section><footer>Offline starter version • নিয়মিত Backup রাখুন</footer></main>
+<script>
+(()=>{'use strict';const DB='lc_wholesale_offline_v1', stores=['cash','bank','banktx','expenses','stock','parties'];let db,profile;
+const $=id=>document.getElementById(id),today=()=>new Date().toISOString().slice(0,10),money=n=>'৳'+Number(n||0).toLocaleString('en-BD',{minimumFractionDigits:2,maximumFractionDigits:2});
+function openDB(){return new Promise((ok,no)=>{let r=indexedDB.open(DB,2);r.onupgradeneeded=()=>{let d=r.result;stores.forEach(s=>{if(!d.objectStoreNames.contains(s)){let st=d.createObjectStore(s,{keyPath:'id'});st.createIndex('scope','scope',{unique:false})}})};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)})}
+function scope(){return profile.type==='personal'?'personal:'+profile.id:'company:'+profile.code.trim().toUpperCase()}
+function all(s){return new Promise((ok,no)=>{let r=db.transaction(s).objectStore(s).getAll();r.onsuccess=()=>ok(r.result.filter(x=>x.scope===scope()));r.onerror=()=>no(r.error)})}
+function put(s,x){return new Promise((ok,no)=>{let r=db.transaction(s,'readwrite').objectStore(s).put(x);r.onsuccess=()=>ok(x);r.onerror=()=>no(r.error)})}
+function safe(x){return String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function obj(f){return Object.fromEntries(new FormData(f).entries())}
+function add(x){return {...x,id:x.id||crypto.randomUUID(),scope:scope(),createdAt:new Date().toISOString()}}
+function msg(id,t){$(id).innerHTML='<div class="msg">'+safe(t)+'</div>'}
+function table(rows,cols){if(!rows.length)return '<p class="muted">এখনও কোনো রেকর্ড নেই।</p>';return '<div class="tablewrap"><table><thead><tr>'+cols.map(c=>'<th>'+c[1]+'</th>').join('')+'</tr></thead><tbody>'+rows.slice().reverse().map(r=>'<tr>'+cols.map(c=>'<td>'+safe(c[2]?c[2](r):(r[c[0]]??''))+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>'}
+async function refresh(){
+let [cash,banks,bt,exp,stock,parties]=await Promise.all(stores.map(all));
+$('cashList').innerHTML=table(cash,[['date','Date'],['name','Particulars'],['type','Type',r=>r.type==='in'?'জমা':'খরচ'],['amount','Amount',r=>money(r.amount)],['ref','Reference']]);
+$('bankSelect').innerHTML=banks.map(b=>'<option value="'+safe(b.id)+'">'+safe(b.bank+' — '+b.holder+' '+(b.account_number||''))+'</option>').join('');
+$('bankAccountsList').innerHTML=table(banks,[['bank','Bank Name'],['holder','Account Holder'],['account_number','Account Number'],['routing_number','Routing Number'],['opening_balance','Opening Balance',r=>money(r.opening_balance)]]);
+$('allBankBalances').innerHTML=table(banks.map(b=>({...b,credit:bt.filter(t=>t.account_id===b.id&&t.type==='in').reduce((n,t)=>n+Number(t.amount||0),0),debit:bt.filter(t=>t.account_id===b.id&&t.type==='out').reduce((n,t)=>n+Number(t.amount||0),0),balance:Number(b.opening_balance||0)+bt.filter(t=>t.account_id===b.id).reduce((n,t)=>n+(t.type==='in'?1:-1)*Number(t.amount||0),0)})),[['bank','Bank'],['holder','Account Holder'],['account_number','Account No.'],['credit','Total Credit',r=>money(r.credit)],['debit','Total Debit',r=>money(r.debit)],['balance','Closing Balance',r=>money(r.balance)]]);
+renderBankTransactions(bt,banks);
+$('partyList').innerHTML=table(parties,[['date','Date'],['name','Party / Account Holder'],['type','Type',r=>r.type==='payable'?'Payable':'Receivable'],['amount','Amount',r=>money(r.amount)],['note','Description']]);
+$('expenseList').innerHTML=table(exp,[['date','Date'],['name','Expense'],['method','Method'],['amount','Amount',r=>money(r.amount)]]);
+$('stockList').innerHTML=table(stock,[['date','Date'],['name','Item'],['code','Code'],['type','Movement'],['qty','Qty'],['price','Unit Price',r=>money(r.price)]]);
+$('cashbal').textContent=money(cash.reduce((n,r)=>n+(r.type==='in'?1:-1)*Number(r.amount),0));
+$('bankbal').textContent=money(banks.reduce((n,r)=>n+Number(r.opening_balance||0),0)+bt.reduce((n,r)=>n+(r.type==='in'?1:-1)*Number(r.amount),0));
+$('exptotal').textContent=money(exp.reduce((n,r)=>n+Number(r.amount||0),0));
+$('stockcount').textContent=new Set(stock.map(x=>x.name)).size;
+$('report').innerHTML='<p>Cash entries: '+cash.length+' · Bank accounts: '+banks.length+' · Bank transactions: '+bt.length+' · Expenses: '+exp.length+' · Stock entries: '+stock.length+' · Payable/Receivable: '+parties.length+'</p>';
+const cashIn=cash.filter(r=>r.type==='in').reduce((n,r)=>n+Number(r.amount||0),0);
+const cashOut=cash.filter(r=>r.type!=='in').reduce((n,r)=>n+Number(r.amount||0),0);
+const bankCredit=bt.filter(r=>r.type==='in').reduce((n,r)=>n+Number(r.amount||0),0);
+const bankDebit=bt.filter(r=>r.type!=='in').reduce((n,r)=>n+Number(r.amount||0),0);
+const stockQty=stock.reduce((n,r)=>n+(r.type==='out'?-1:1)*Number(r.qty||0),0);
+const stockValue=stock.reduce((n,r)=>n+(r.type==='out'?-1:1)*Number(r.qty||0)*Number(r.price||0),0);
+$('calcCashIn').textContent=money(cashIn);$('calcCashOut').textContent=money(cashOut);$('calcCashNet').textContent=money(cashIn-cashOut);
+$('calcBankNet').textContent=money(banks.reduce((n,r)=>n+Number(r.opening_balance||0),0)+bankCredit-bankDebit);
+$('calcExpenses').textContent=money(exp.reduce((n,r)=>n+Number(r.amount||0),0));
+$('calcStockQty').textContent=stockQty.toLocaleString('en-US');
+$('calcStockValue').textContent=money(stockValue);$('calcBankCredit').textContent=money(bankCredit);$('calcBankDebit').textContent=money(bankDebit);
+}
+async function renderBankTransactions(bt,banks){
+ const from=$('bankFrom')?.value||'', to=$('bankTo')?.value||'';
+ const accountId=$('bankSelect')?.value||'';
+ const chosenBank=banks.find(b=>b.id===accountId);
+ const selected=bt.filter(r=>(!accountId||r.account_id===accountId)&&(!from||r.date>=from)&&(!to||r.date<=to)).sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+ const accountMap=Object.fromEntries(banks.map(b=>[b.id,b]));
+ let running=Number(chosenBank?.opening_balance||0);
+ const rows=selected.map(r=>{
+   running+=(r.type==='in'?1:-1)*Number(r.amount||0);
+   return {...r,debit:r.type==='out'?Number(r.amount||0):0,credit:r.type==='in'?Number(r.amount||0):0,balance:running,accountName:accountMap[r.account_id]?.bank||''};
+ });
+ const holderTerm=($('holderFilter')?.value||'').trim().toLowerCase();
+ const visibleRows=rows.filter(r=>!holderTerm||(chosenBank?.holder||'').toLowerCase().includes(holderTerm));
+ const totalDebit=visibleRows.reduce((n,r)=>n+r.debit,0),totalCredit=visibleRows.reduce((n,r)=>n+r.credit,0);
+ let body=visibleRows.length?'<div class="tablewrap"><table><thead><tr><th>Date</th><th>Particulars</th><th>Debit</th><th>Credit</th><th>Balance</th><th class="no-print">Action</th></tr></thead><tbody>'+visibleRows.slice().reverse().map(r=>'<tr><td>'+safe(r.date)+'</td><td>'+safe(r.name)+'</td><td>'+money(r.debit)+'</td><td>'+money(r.credit)+'</td><td>'+money(r.balance)+'</td><td class="no-print"><button type="button" onclick="editBankTxn(\''+r.id+'\')">Edit</button> <button type="button" class="danger" onclick="deleteBankTxn(\''+r.id+'\')">Delete</button></td></tr>').join('')+'</tbody></table></div>':'<p class="muted">কোনো লেনদেন পাওয়া যায়নি।</p>';
+ $('bankTransactionList').innerHTML='<h3>Bank Transactions — Date-wise Statement</h3><p>Bank: <b>'+safe(chosenBank?.bank||'সব ব্যাংক')+'</b> · Account Holder: <b>'+safe(chosenBank?.holder||'সব')+'</b> · Account No.: '+safe(chosenBank?.account_number||'—')+'</p><p class="muted">Date range: '+safe(from||'শুরু থেকে')+' — '+safe(to||'আজ পর্যন্ত')+'</p><div class="stats"><div class="stat">Opening Balance<b>'+money(chosenBank?.opening_balance||0)+'</b></div><div class="stat">Total Credit<b>'+money(totalCredit)+'</b></div><div class="stat">Total Debit<b>'+money(totalDebit)+'</b></div><div class="stat">Closing Balance<b>'+money((Number(chosenBank?.opening_balance||0))+totalCredit-totalDebit)+'</b></div></div>'+body;
+}
+
+window.editBankTxn=async id=>{let rows=await all('banktx'),r=rows.find(x=>x.id===id);if(!r)return;let name=prompt('Particulars / Description',r.name);if(name===null)return;let amount=prompt('Amount',r.amount);if(amount===null)return;let date=prompt('Date (YYYY-MM-DD)',r.date);if(date===null)return;let type=prompt('Type লিখুন in অথবা out',r.type);if(type===null)return;if(!['in','out'].includes(type)||!Number.isFinite(Number(amount))||Number(amount)<=0){alert('Type বা Amount সঠিক নয়');return}await put('banktx',{...r,name,amount:Number(amount),date,type});await refresh()};
+window.deleteBankTxn=async id=>{if(!confirm('এই Bank Transaction মুছে ফেলবেন?'))return;await new Promise((ok,no)=>{let q=db.transaction('banktx','readwrite').objectStore('banktx').delete(id);q.onsuccess=ok;q.onerror=()=>no(q.error)});await refresh()};
+function bind(form,store){$(form).addEventListener('submit',async e=>{e.preventDefault();try{let x=obj(e.target);['amount','qty','price','opening_balance'].forEach(k=>{if(x[k]!==undefined)x[k]=Number(x[k]||0)});await put(store,add(x));e.target.reset();e.target.querySelectorAll('input[type=date]').forEach(i=>i.value=today());await refresh();alert('সফলভাবে Save হয়েছে।')}catch(err){alert('Save error: '+err.message)}})}
+$('ptype').onchange=()=>{$('companyFields').classList.toggle('hidden',$('ptype').value==='personal');$('role').innerHTML=$('ptype').value==='personal'?'<option value="owner">Personal Owner</option>':'<option value="admin">Company Admin</option><option value="employee">Company Employee</option>'};$('ptype').dispatchEvent(new Event('change'));
+$('enter').onclick=async()=>{let name=$('pname').value.trim(),type=$('ptype').value,code=$('ccode').value.trim(),companyName=$('cname').value.trim();if(!name){msg('loginMsg','নাম লিখুন।');return}if(type==='company'&&(!code||!companyName)){msg('loginMsg','Company Name ও Code লিখুন।');return}const identityKey='lc_offline_profile_'+(type==='personal'?'personal:'+name.trim().toLowerCase():'company:'+code.trim().toUpperCase());
+let savedProfile=null;try{savedProfile=JSON.parse(localStorage.getItem(identityKey)||'null')}catch(e){}
+profile={id:savedProfile?.id||crypto.randomUUID(),name,type,code,companyName,role:$('role').value};
+try{localStorage.setItem(identityKey,JSON.stringify(profile));localStorage.setItem('lc_offline_last_profile',identityKey)}catch(e){}
+$('login').classList.add('hidden');$('app').classList.remove('hidden');$('welcome').textContent='স্বাগতম, '+name;$('ctx').textContent=(type==='personal'?'Personal Account':'Company: '+companyName+' · Code: '+code)+' · '+profile.role;await refresh()};
+$('switch').onclick=()=>{profile=null;$('app').classList.add('hidden');$('login').classList.remove('hidden')};
+$('tabs').onclick=e=>{let b=e.target.closest('[data-tab]');if(!b)return;document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.pane').forEach(x=>x.classList.toggle('hidden',x.id!=='pane-'+b.dataset.tab))};
+['cashForm','bankForm','bankTxnForm','expenseForm','stockForm','partyForm'].forEach(id=>{let f=$(id);if(f)f.querySelectorAll('input[type=date]').forEach(i=>i.value=today())});
+bind('cashForm','cash');bind('bankForm','bank');bind('bankTxnForm','banktx');bind('expenseForm','expenses');bind('stockForm','stock');bind('partyForm','parties');
+$('backup').onclick=async()=>{let data={format:'lc-offline-backup-v1',profile:{type:profile.type,code:profile.code,companyName:profile.companyName},exportedAt:new Date().toISOString(),stores:{}};for(let s of stores)data.stores[s]=await all(s);let a=document.createElement('a'),u=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.href=u;a.download='lc-backup-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{try{let data=JSON.parse(await e.target.files[0].text());if(data.format!=='lc-offline-backup-v1')throw Error('Backup format সঠিক নয়');if(data.profile.type!==profile.type)throw Error('Account type মিলছে না');if(profile.type==='company'&&String(data.profile.code).toUpperCase()!==profile.code.toUpperCase())throw Error('Company Code মিলছে না');let n=0;for(let s of stores)for(let r of (data.stores[s]||[])){await put(s,{...r,scope:scope()});n++}await refresh();msg('report','Import complete: '+n+'টি record যোগ/আপডেট হয়েছে')}catch(err){msg('report',err.message)}e.target.value=''};
+$('csv').onclick=async()=>{let lines=['section,date,name,type,amount,note'];for(let s of stores)for(let r of await all(s))lines.push([s,r.date||'',r.name||r.bank||r.lc_no||'',r.type||'',r.amount??r.opening_balance??'',r.note||''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));let a=document.createElement('a'),u=URL.createObjectURL(new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}));a.href=u;a.download='lc-records.csv';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+(async()=>{try{db=await openDB();
+try{
+ const lastKey=localStorage.getItem('lc_offline_last_profile');
+ const saved=lastKey?JSON.parse(localStorage.getItem(lastKey)||'null'):null;
+ if(saved){
+   profile=saved;
+   $('pname').value=saved.name||'';
+   $('ptype').value=saved.type||'personal';
+   $('ptype').dispatchEvent(new Event('change'));
+   $('cname').value=saved.companyName||'';
+   $('ccode').value=saved.code||'';
+   $('role').value=saved.role||($('ptype').value==='personal'?'owner':'admin');
+   $('login').classList.add('hidden');$('app').classList.remove('hidden');
+   $('welcome').textContent='স্বাগতম, '+saved.name;
+   $('ctx').textContent=(saved.type==='personal'?'Personal Account':'Company: '+saved.companyName+' · Code: '+saved.code)+' · '+saved.role;
+   refresh();
+ }
+}catch(e){}
+}catch(e){msg('loginMsg','এই Browser-এ IndexedDB চালু নেই। Chrome বা HTTPS hosting ব্যবহার করুন।')}})();
+
+window.printSection = function(paneId){
+ const pane=document.getElementById(paneId), target=document.getElementById('printArea');
+ if(!pane||!target)return;
+ const companyInput=document.getElementById('cname');
+ const company=(companyInput&&companyInput.value.trim())||'Hili Impex';
+ const titleEl=pane.querySelector('h2'), title=titleEl?titleEl.textContent.trim():'Report';
+ const clone=pane.cloneNode(true);
+ clone.querySelectorAll('form,.actions,button,input,select,label,.muted,.no-print').forEach(el=>el.remove());
+ clone.querySelectorAll('.hidden').forEach(el=>el.classList.remove('hidden'));
+ clone.querySelectorAll('.tablewrap').forEach(el=>el.style.overflow='visible');
+ target.innerHTML='';
+ const head=document.createElement('div'); head.className='print-head';
+ const h1=document.createElement('h1'); h1.textContent=company;
+ const sub=document.createElement('div'); sub.className='sub'; sub.textContent='Import & Export';
+ const report=document.createElement('h2'); report.textContent=title;
+ const date=document.createElement('div'); date.className='sub'; date.textContent='Printed: '+new Date().toLocaleString();
+ head.append(h1,sub,report,date); target.append(head);
+ clone.querySelector('h2')?.remove(); target.append(clone);
+ window.print();
+};
+
+document.getElementById('printActiveBtn').addEventListener('click',()=>{
+ const active=[...document.querySelectorAll('.pane')].find(p=>!p.classList.contains('hidden'));
+ if(active) window.printSection(active.id);
+ else alert('আগে একটি রিপোর্ট বিভাগ নির্বাচন করুন।');
+});
+
+})();
+</script></body></html>
