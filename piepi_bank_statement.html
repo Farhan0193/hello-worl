@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pieπ | Smart Accounting & Business Manager</title>
+<style>
+:root{--navy:#173b63;--blue:#2878b9;--cyan:#eaf5fb;--ink:#263747;--muted:#718096;--line:#dce5ec;--bg:#f4f7fa;--green:#198754;--red:#c0392b;--gold:#d99b22}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,-apple-system,"Noto Sans Bengali",Arial,sans-serif}
+header{background:linear-gradient(110deg,#173b63,#2878b9);color:#fff;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:5;box-shadow:0 3px 12px #173b6328}
+.brand{font-size:25px;font-weight:800;letter-spacing:.3px}.brand small{font-size:11px;font-weight:500;opacity:.85;display:block;letter-spacing:1px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid #cbd8e2;background:#fff;color:#24425d;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:650}.btn:hover{filter:brightness(.97);transform:translateY(-1px)}.btn.primary{background:#2878b9;color:white;border-color:#2878b9}.btn.green{background:#e7f6ee;color:#147443;border-color:#bfe6d0}.btn.red{background:#fff0ef;color:#b72c25;border-color:#f1c7c4}.btn.small{padding:5px 8px;font-size:12px}
+.shell{display:grid;grid-template-columns:245px 1fr;min-height:calc(100vh - 68px)}aside{background:#fff;border-right:1px solid var(--line);padding:12px 9px;position:sticky;top:68px;height:calc(100vh - 68px);overflow:auto}
+.navlabel{font-size:11px;color:#8a99a8;font-weight:800;letter-spacing:1px;padding:12px 12px 6px}.nav{width:100%;border:0;background:transparent;text-align:left;padding:9px 12px;border-radius:8px;color:#456078;cursor:pointer;font-size:13px;font-weight:650;display:flex;gap:10px;align-items:center}.nav:hover,.nav.active{background:#eaf4fb;color:#176da8}.nav .ico{width:20px;text-align:center;font-size:16px}.nav .count{margin-left:auto;background:#f0f3f6;border-radius:12px;padding:1px 7px;font-size:11px}
+main{padding:24px;min-width:0;max-width:1600px;width:100%;margin:auto}.crumb{color:#7a8997;margin-bottom:14px}.pagehead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:18px}.pagehead h1{font-size:23px;margin:0;color:#244968}.pagehead p{margin:4px 0;color:var(--muted)}.actions{display:flex;gap:7px;flex-wrap:wrap}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px;margin-bottom:20px}.metric{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:0 2px 7px #23384b08}.metric .label{color:#778899;font-size:12px}.metric strong{display:block;font-size:24px;color:#214f77;margin:5px 0}.metric em{font-style:normal;font-size:11px;color:#178353}
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:18px;overflow:hidden;box-shadow:0 2px 7px #23384b08}.panel h3{margin:0;padding:13px 16px;background:#f0f5f8;color:#536b7f;font-size:14px;border-bottom:1px solid var(--line)}.panelbody{padding:16px}
+.reportgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px}.reportgroup{border:1px solid var(--line);border-radius:11px;overflow:hidden;background:#fff}.reportgroup h3{background:#eef4f8;color:#657b8e;padding:13px 15px;margin:0;font-size:14px}.reportlink{padding:10px 15px;border-top:1px solid #e8edf1;color:#34779f;cursor:pointer}.reportlink:hover{background:#f2f9fd}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}.toolbar input,.toolbar select{max-width:230px}
+input,select,textarea{font:inherit;border:1px solid #ccd8e1;border-radius:7px;padding:9px 10px;background:#fff;color:#263747;width:100%;min-width:0}label{font-size:12px;color:#637789;font-weight:700;display:block;margin-bottom:5px}.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px}.field.full{grid-column:1/-1}
+table{border-collapse:collapse;width:100%;font-size:13px}th{background:#edf4f8;color:#536b7f;text-align:left;font-weight:750}th,td{padding:10px;border-bottom:1px solid #e8edf1;vertical-align:top}tbody tr:hover{background:#f8fbfd}.tablewrap{overflow:auto}.empty{text-align:center;color:#8b99a5;padding:25px}
+.notice{background:#f0f8fd;border:1px solid #d4eaf7;color:#3f6d89;padding:11px 13px;border-radius:8px;margin-bottom:14px}
+.hidden{display:none!important}.muted{color:var(--muted)}.positive{color:var(--green);font-weight:700}.negative{color:var(--red);font-weight:700}.pill{background:#edf5fa;color:#3d7396;border-radius:20px;padding:3px 8px;font-size:11px}
+footer{text-align:center;color:#91a0ad;font-size:11px;padding:18px}
+@media(max-width:800px){.shell{grid-template-columns:1fr}aside{position:static;height:auto;display:flex;overflow:auto;gap:4px;border-right:0;border-bottom:1px solid var(--line);padding:7px}.navlabel{display:none}.nav{white-space:nowrap;width:auto;flex-shrink:0}.nav .count{display:none}main{padding:14px}header{padding:11px 14px}.brand{font-size:21px}}
+@media print{header,aside,.no-print,.actions,.toolbar .btn,.row-actions,footer{display:none!important}.shell{display:block}main{padding:0;max-width:none}.panel,.metric{box-shadow:none;break-inside:avoid}body{background:white;font-size:11px}th,td{padding:6px}.pagehead h1{font-size:19px}.print-head{display:block!important}}
+.print-head{display:none}
+@media print{.no-print,.row-actions,.no-print th,.no-print td{display:none!important}.tablewrap{overflow:visible!important}table{width:100%!important}}
+
+/* pieπ polished professional dashboard theme */
+:root{--navy:#0755a6;--blue:#0878e8;--cyan:#eaf4ff;--ink:#17365d;--muted:#7186a5;--line:#d5e5f8;--bg:#f3f8ff;--green:#15965b;--red:#d94343;--gold:#e99b20}
+body{background:linear-gradient(135deg,#f4f8ff 0%,#eef6ff 100%);color:#17365d}
+header{min-height:64px;background:linear-gradient(105deg,#0755a6 0%,#0878e8 58%,#2798f2 100%);padding:10px 22px;box-shadow:0 4px 16px #0755a626}
+.brand{font-size:29px;line-height:1.1}.brand small{font-size:10px;letter-spacing:1.15px}
+.shell{grid-template-columns:218px minmax(0,1fr);min-height:calc(100vh - 64px);align-items:stretch}
+aside{top:64px;height:calc(100vh - 64px);padding:12px 8px;background:#fff;border-right:1px solid #dce9f8;box-shadow:2px 0 10px #1c5b9510}
+.navlabel{color:#6c86a8;font-size:10px;padding:12px 12px 5px;letter-spacing:1.1px}
+.nav{padding:9px 11px;color:#31577f;border-radius:7px;font-size:12px;min-height:35px}
+.nav:hover,.nav.active{background:#e7f2ff;color:#075dbb}.nav.active{box-shadow:inset 3px 0 #0878e8}
+main{padding:20px 22px;min-width:0;max-width:none;width:100%;margin:0 auto;align-self:start}
+.crumb{font-size:12px;color:#8196b2;margin-bottom:9px}
+.pagehead{background:linear-gradient(110deg,#fff 0%,#edf6ff 100%);border:1px solid #d4e5fa;border-radius:11px;padding:17px 18px;margin-bottom:16px;align-items:center;box-shadow:0 3px 12px #17558d0b}
+.pagehead h1{font-size:22px;color:#0755a6;font-weight:800}.pagehead p{font-size:13px;color:#6f86a7}
+.btn{border:1px solid #c7dcf5;color:#14528d;border-radius:7px;box-shadow:0 1px 2px #174b7a0a}.btn.primary{background:linear-gradient(110deg,#0878e8,#1595f4);border-color:#0878e8;color:#fff}.btn:hover{filter:brightness(.98);box-shadow:0 3px 9px #0878e825}
+.panel{border:1px solid #d7e6f8;border-radius:11px;box-shadow:0 3px 12px #174b7a0b;margin-bottom:17px}
+.panel h3{background:linear-gradient(90deg,#eaf4ff,#f8fbff);color:#14599e;border-bottom:1px solid #dceafa;font-weight:750;padding:13px 16px}
+.panelbody{padding:16px}
+input,select,textarea{border:1px solid #cbdcf0;border-radius:7px;padding:10px 11px;color:#193b63;background:#fff;min-height:39px}
+input:focus,select:focus,textarea:focus{outline:2px solid #b9dcff;border-color:#4c9bea}
+label{color:#49698d;font-size:12px}
+.formgrid{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px 14px}
+th{background:#eaf3ff;color:#245787}th,td{border-bottom:1px solid #e5edf7;padding:11px 10px}tbody tr:hover{background:#f3f8ff}
+.metric{border:1px solid #d7e6f8;box-shadow:0 3px 12px #174b7a0b}.metric strong{color:#075db7}
+.reportgroup{border-color:#d7e6f8;box-shadow:0 3px 12px #174b7a0a}.reportgroup h3{background:#eaf4ff;color:#14599e}
+.notice{background:#edf6ff;border-color:#d1e6fc;color:#285d8e}
+footer{color:#8196b2;padding:16px}
+@media(min-width:801px){main{min-height:calc(100vh - 64px)}.shell{grid-template-columns:218px minmax(0,1fr)}}
+@media(max-width:800px){.shell{grid-template-columns:1fr}aside{top:0;height:auto}.nav{min-height:34px}main{padding:12px}.pagehead{padding:14px}.pagehead h1{font-size:19px}.formgrid{grid-template-columns:repeat(auto-fit,minmax(145px,1fr))}header{padding:10px 12px}.brand{font-size:23px}.top-actions .btn{padding:6px 8px;font-size:11px}}
+@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{background:#fff!important}.pagehead,.panel h3,th{background-color:#eaf4ff!important}header,aside,.no-print,.actions,.toolbar .btn,footer{display:none!important}.shell{display:block}main{padding:0!important;margin:0!important;max-width:none!important}.panel,.metric,.pagehead{box-shadow:none;break-inside:avoid;border:1px solid #cbdcf0!important}th{color:#174e85!important}td{color:#172f4c!important}}
+</style></head>
+<body>
+<header><div class="brand">pieπ <small>SMART ACCOUNTING • BUSINESS MANAGER</small></div><div class="top-actions"><button class="btn" onclick="backupJSON()">⬇ Backup</button><button class="btn" onclick="document.getElementById('restoreFile').click()">⬆ Restore</button><button class="btn" onclick="exportCSV()">CSV Export</button><button class="btn" onclick="showSettings()">⚙ Settings</button><input id="restoreFile" type="file" accept=".json" hidden onchange="restoreJSON(event)"></div></header>
+<div class="shell"><aside id="sidebar"></aside><main id="main"></main></div><footer>pieπ • Local-first accounting workspace • Data stays in this browser unless you export a backup</footer>
+<script>
+const modules=[
+['summary','Summary','▦','Overview'],
+['bank','Bank and Cash Accounts','◉','Accounts'],
+['bankstatement','Bank Statement','▤','Accounts'],
+['receipts','Receipts','＋','Money In'],
+['payments','Payments','－','Money Out'],
+['transfers','Inter Account Transfers','⇄','Transfers'],
+['reconcile','Bank Reconciliations','☑','Banking'],
+['claims','Expense Claims','▣','Expenses'],
+['customers','Customers','♟','Sales'],
+['quotes','Sales Quotes','✎','Sales'],
+['sales','Sales Invoices','▤','Sales'],
+['creditnotes','Credit Notes','✂','Sales'],
+['suppliers','Suppliers','▦','Purchases'],
+['purchases','Purchase Invoices','▤','Purchases'],
+['inventory','Inventory Items','▣','Stock'],
+['employees','Employees','♣','Payroll'],
+['payslips','Payslips','▤','Payroll'],
+['assets','Fixed Assets','▦','Assets'],
+['depreciation','Depreciation Entries','↘','Assets'],
+['intangibles','Intangible Assets','≈','Assets'],
+['amortization','Amortization Entries','↘','Assets'],
+['capital','Capital Accounts','▤','Equity'],
+['journals','Journal Entries','⇄','Accounting'],
+['reports','Reports','▥','Reports']
+];
+const fields={
+bank:[['name','Account Name'],['holder','Account Holder'],['bankname','Bank Name'],['accountno','Account Number'],['routing','Routing Number'],['type','Account Type','select','Bank,Cash,Mobile Banking'],['opening','Opening Balance','number'],['date','Date','date'],['notes','Notes']],
+receipts:[['date','Date','date'],['from','Received From'],['account','Deposit Account'],['category','Category'],['amount','Amount','number'],['method','Payment Method','select','Cash,Bank,Cheque,Mobile Banking'],['ref','Reference'],['notes','Notes']],
+payments:[['date','Date','date'],['to','Paid To'],['account','Paid From Account'],['category','Category'],['amount','Amount','number'],['method','Payment Method','select','Cash,Bank,Cheque,Mobile Banking'],['ref','Reference'],['notes','Notes']],
+transfers:[['date','Date','date'],['from','From Account'],['to','To Account'],['amount','Amount','number'],['fee','Transfer Fee','number'],['ref','Reference'],['notes','Notes']],
+reconcile:[['date','Date','date'],['account','Bank Account'],['statement','Statement Balance','number'],['book','Book Balance','number'],['difference','Difference','number'],['notes','Notes']],
+claims:[['date','Date','date'],['employee','Employee'],['description','Description'],['category','Category'],['amount','Amount','number'],['status','Status','select','Pending,Approved,Paid,Rejected']],
+customers:[['name','Customer Name'],['phone','Phone'],['email','Email'],['address','Address'],['opening','Opening Balance','number'],['notes','Notes']],
+quotes:[['date','Date','date'],['number','Quote No.'],['customer','Customer'],['description','Description'],['amount','Total Amount','number'],['valid','Valid Until','date'],['status','Status','select','Draft,Sent,Accepted,Rejected']],
+sales:[['date','Date','date'],['number','Invoice No.'],['customer','Customer'],['description','Description'],['subtotal','Subtotal','number'],['discount','Discount','number'],['tax','Tax/VAT','number'],['amount','Total Amount','number'],['paid','Paid Amount','number'],['due','Due Amount','number'],['status','Status','select','Unpaid,Partially Paid,Paid']],
+creditnotes:[['date','Date','date'],['number','Credit Note No.'],['customer','Customer'],['reason','Reason'],['amount','Amount','number'],['reference','Invoice Reference']],
+suppliers:[['name','Supplier Name'],['phone','Phone'],['email','Email'],['address','Address'],['opening','Opening Balance','number'],['notes','Notes']],
+purchases:[['date','Date','date'],['number','Bill No.'],['supplier','Supplier'],['description','Description'],['subtotal','Subtotal','number'],['tax','Tax/VAT','number'],['amount','Total Amount','number'],['paid','Paid Amount','number'],['due','Due Amount','number']],
+inventory:[['name','Item Name'],['sku','SKU / Code'],['category','Category'],['unit','Unit'],['quantity','Quantity','number'],['cost','Unit Cost','number'],['price','Selling Price','number'],['reorder','Reorder Level','number'],['notes','Notes']],
+employees:[['name','Employee Name'],['id','Employee ID'],['phone','Phone'],['designation','Designation'],['salary','Monthly Salary','number'],['join','Joining Date','date'],['notes','Notes']],
+payslips:[['date','Pay Date','date'],['employee','Employee'],['month','Salary Month'],['basic','Basic Salary','number'],['allowance','Allowance','number'],['deduction','Deduction','number'],['net','Net Pay','number']],
+assets:[['name','Asset Name'],['code','Asset Code'],['date','Purchase Date','date'],['cost','Purchase Cost','number'],['salvage','Salvage Value','number'],['life','Useful Life (Years)','number'],['method','Depreciation Method','select','Straight Line,Reducing Balance'],['notes','Notes']],
+depreciation:[['date','Entry Date','date'],['asset','Asset Name'],['amount','Depreciation Amount','number'],['accumulated','Accumulated Depreciation','number'],['notes','Notes']],
+intangibles:[['name','Intangible Asset'],['date','Acquisition Date','date'],['cost','Cost','number'],['life','Useful Life (Years)','number'],['notes','Notes']],
+amortization:[['date','Entry Date','date'],['asset','Intangible Asset'],['amount','Amortization Amount','number'],['accumulated','Accumulated Amortization','number']],
+capital:[['date','Date','date'],['holder','Account Holder'],['description','Description'],['amount','Capital Amount','number'],['type','Entry Type','select','Investment,Withdrawal,Profit Share']],
+journals:[['date','Date','date'],['number','Journal No.'],['description','Description'],['debit','Debit Account'],['debitamount','Debit Amount','number'],['credit','Credit Account'],['creditamount','Credit Amount','number'],['notes','Notes']]
+};
+const titles=Object.fromEntries(modules.map(x=>[x[0],x[1]]));
+let db=JSON.parse(localStorage.getItem('piepi_db')||'{}');modules.forEach(m=>{if(!Array.isArray(db[m[0]]))db[m[0]]=[]});
+let current='summary',editing=null,company=JSON.parse(localStorage.getItem('piepi_company')||'{"name":"My Business","email":"","phone":"","address":"","currency":"BDT"}');
+const $=id=>document.getElementById(id), money=n=>Number(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+(company.currency||'BDT');
+function save(){localStorage.setItem('piepi_db',JSON.stringify(db))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function sidebar(){let html='';let group='';modules.forEach(m=>{if(m[3]!==group){group=m[3];html+=`<div class="navlabel">${esc(group.toUpperCase())}</div>`}html+=`<button class="nav ${current===m[0]?'active':''}" onclick="go('${m[0]}')"><span class="ico">${m[2]}</span>${m[1]}${m[0]!=='summary'&&m[0]!=='reports'?`<span class="count">${db[m[0]].length}</span>`:''}</button>`});html+=`<div class="navlabel">SAAS</div><button class="nav ${current==='plans'?'active':''}" onclick="go('plans')"><span class="ico">💳</span>Subscription Plans</button>`;$('sidebar').innerHTML=html}
+function go(id){current=id;editing=null;sidebar();render()}
+function pageHead(title,sub,buttons=true){return `<div class="pagehead"><div><div class="crumb">pieπ　›　${esc(title)}</div><h1>${esc(title)}</h1><p>${esc(sub||'Manage your business records and reports.')}</p></div>${buttons?`<div class="actions no-print"><button class="btn" onclick="window.print()">🖨 Print / Save PDF</button>${fields[current]?`<button class="btn primary" onclick="openForm()">＋ Add New</button>`:''}</div>`:''}</div><div class="print-head"><b>${esc(company.name)}</b> · ${esc(company.address)} · ${esc(company.phone)}<hr></div>`}
+function render(){if(current==='summary')return dashboard();if(current==='bankstatement')return renderBankStatement();if(current==='reports')return reports();if(current==='settings')return showSettings();if(current==='plans')return renderPlans();renderModule()}
+
+function renderPlans(){let plans=[['Free','৳0','3 Users','7 days free trial'],['Starter','৳499 / month','10 Users','All software features'],['Professional','৳999 / month','50 Users','All software features'],['Business','৳1,999 / month','150 Users','All software features']];$('main').innerHTML=pageHead('Subscription Plans','All plans include the same accounting and business management features.')+`<div class="notice"><b>Plan policy:</b> Free plan is available for 7 days and supports up to 3 users. Paid plans have the same features; only the user limit and subscription period differ. Prices are proposed sample prices and can be changed before launch.</div><div class="cards">${plans.map((p,i)=>`<div class="metric" style="border-top:4px solid ${i===2?'#198754':'#2878b9'}"><div class="label">${p[0]}</div><strong>${p[1]}</strong><div class="pill">${p[2]}</div><p class="muted">${p[3]}</p><p>✓ All Accounting Sections<br>✓ Reports & PDF Printing<br>✓ Inventory & Payroll<br>✓ Backup & Restore<br>✓ Edit, Delete & Search</p></div>`).join('')}</div><div class="panel"><h3>Important — Current HTML Preview</h3><div class="panelbody">These plan cards are for planning and preview only. User registration, 7-day trial enforcement, payment collection, user limits and subscription activation will become functional after Supabase authentication, database policies and a payment gateway are connected.</div></div>`}
+
+function dashboard(){let income=sum('receipts','amount'),out=sum('payments','amount'),sales=sum('sales','amount'),purchase=sum('purchases','amount'),stock=db.inventory.reduce((a,x)=>a+Number(x.quantity||0)*Number(x.cost||0),0);$('main').innerHTML=pageHead('Summary','Your business at a glance')+`<div class="cards">
+${metric('Total Receipts',money(income),'Money received')}${metric('Total Payments',money(out),'Money paid')}${metric('Net Cash Flow',money(income-out),income>=out?'Positive cash flow':'Review cash flow')}${metric('Sales Invoices',money(sales),'Total invoiced')}${metric('Purchase Invoices',money(purchase),'Total purchases')}${metric('Inventory Value',money(stock),'Quantity × unit cost')}
+</div><div class="reportgrid"><section class="reportgroup"><h3>Quick Actions</h3>${[['receipts','＋ Add Receipt'],['payments','－ Add Payment'],['sales','＋ Create Sales Invoice'],['purchases','＋ Add Purchase Invoice'],['inventory','▣ Manage Inventory'],['reports','▥ Open Reports']].map(a=>`<div class="reportlink" onclick="go('${a[0]}')">${a[1]} →</div>`).join('')}</section><section class="reportgroup"><h3>Business Overview</h3>${modules.filter(m=>!['summary','reports'].includes(m[0])).map(m=>`<div class="reportlink" onclick="go('${m[0]}')">${m[1]} <span class="pill">${db[m[0]].length} records</span></div>`).join('')}</section></div>`}
+function metric(label,value,note){return `<div class="metric"><div class="label">${label}</div><strong>${value}</strong><em>${note}</em></div>`}
+function sum(mod,key){return db[mod].reduce((a,r)=>a+Number(r[key]||0),0)}
+function bankTx(accountId){
+ const acc=db.bank.find(a=>String(a.accountno||a.name)===String(accountId))||db.bank.find(a=>a.name===accountId);
+ if(!acc)return [];
+ const match=(v)=>String(v||'').trim()===String(acc.name||'').trim()||String(v||'').trim()===String(acc.accountno||'').trim()||String(v||'').trim()===String(acc.bankname||'').trim();
+ let tx=[];
+ db.receipts.forEach((r,i)=>{if(match(r.account))tx.push({date:r.date||'',particular:r.from||r.category||'Cash In',holder:acc.holder||'',debit:0,credit:Number(r.amount||0),kind:'Cash In',source:'receipts',index:i,accountno:acc.accountno||''})});
+ db.payments.forEach((r,i)=>{if(match(r.account))tx.push({date:r.date||'',particular:r.to||r.category||'Cash Out',holder:acc.holder||'',debit:Number(r.amount||0),credit:0,kind:'Cash Out',source:'payments',index:i,accountno:acc.accountno||''})});
+ db.transfers.forEach((r,i)=>{if(match(r.from))tx.push({date:r.date||'',particular:'Inter Account Transfer',holder:acc.holder||'',debit:Number(r.amount||0)+Number(r.fee||0),credit:0,kind:'Cash Out',source:'transfers',index:i,accountno:acc.accountno||''});if(match(r.to))tx.push({date:r.date||'',particular:'Inter Account Transfer',holder:acc.holder||'',debit:0,credit:Number(r.amount||0),kind:'Cash In',source:'transfers',index:i,accountno:acc.accountno||''})});
+ return tx.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+}
+function renderBankStatement(){
+ const opts=db.bank.map((a,i)=>`<option value="${esc(a.accountno||a.name)}">${esc(a.name||a.bankname||'Bank Account')} (${esc(a.accountno||'No account number')})</option>`).join('');
+ $('main').innerHTML=pageHead('Bank Statement','Bank-wise transactions with running balance')+`<div class="panel"><div class="panelbody"><div class="formgrid no-print" style="align-items:end"><div><label>Bank Account</label><select id="bsAccount">${opts||'<option value="">No bank account added</option>'}</select></div><div><label>From Date</label><input id="bsFrom" type="date"></div><div><label>To Date</label><input id="bsTo" type="date"></div><div><button class="btn primary" onclick="drawBankStatement()">⌕ View Statement</button></div></div></div></div><div id="bankStatementOutput"></div>`;
+ if(db.bank.length)drawBankStatement();
+}
+function drawBankStatement(){
+ const id=$('bsAccount')?.value,acc=db.bank.find(a=>String(a.accountno||a.name)===String(id))||db.bank.find(a=>a.name===id);if(!acc){$('bankStatementOutput').innerHTML='<div class="empty">প্রথমে Bank and Cash Accounts থেকে ব্যাংক অ্যাকাউন্ট যোগ করুন।</div>';return}
+ const from=$('bsFrom')?.value||'',to=$('bsTo')?.value||'';let tx=bankTx(id).filter(t=>(!from||t.date>=from)&&(!to||t.date<=to));
+ let opening=Number(acc.opening||0);bankTx(id).filter(t=>from&&t.date<from).forEach(t=>opening+=t.credit-t.debit);
+ let balance=opening,totalIn=0,totalOut=0;const rows=tx.map(t=>{balance+=t.credit-t.debit;totalIn+=t.credit;totalOut+=t.debit;return `<tr><td>${esc(t.date||'—')}</td><td>${esc(t.particular)}<div class="muted" style="font-size:11px">${esc(t.kind)}</div></td><td>${esc(t.holder||'—')}</td><td class="negative">${t.debit?money(t.debit):'—'}</td><td class="positive">${t.credit?money(t.credit):'—'}</td><td><b>${money(balance)}</b></td><td class="no-print row-actions"><button class="btn small primary" onclick="editBankTx('${t.source}',${t.index})">Edit</button> <button class="btn small red" onclick="deleteBankTx('${t.source}',${t.index})">Delete</button></td></tr>`}).join('');
+ $('bankStatementOutput').innerHTML=`<div class="panel"><div class="panelbody"><div class="pagehead" style="margin:0 0 14px"><div><h1>${esc(acc.bankname||acc.name||'Bank Account')}</h1><p>Account Holder: <b>${esc(acc.holder||'—')}</b><br>Bank Account Number: <b>${esc(acc.accountno||'—')}</b>　|　Routing: ${esc(acc.routing||'—')}</p></div><div class="actions no-print"><button class="btn green" onclick="window.print()">🖨 Print</button><button class="btn primary" onclick="window.print()">PDF</button></div></div><div class="cards"><div class="metric"><div class="label">Opening Balance</div><strong>${money(opening)}</strong></div><div class="metric"><div class="label">Total Cash In</div><strong class="positive">${money(totalIn)}</strong></div><div class="metric"><div class="label">Total Cash Out</div><strong class="negative">${money(totalOut)}</strong></div><div class="metric"><div class="label">Closing Balance</div><strong>${money(balance)}</strong></div></div><div class="tablewrap"><table><thead><tr><th>Date</th><th>Particular</th><th>Account Holder</th><th>Debit</th><th>Credit</th><th>Balance</th><th class="no-print">Action</th></tr></thead><tbody>${rows||`<tr><td colspan="7" class="empty">No transactions found for this bank account.</td></tr>`}</tbody></table></div><p class="muted">Total Transactions: ${tx.length}</p></div></div>`;
+}
+function editBankTx(source,index){current=source;sidebar();render();openForm(index)}
+function deleteBankTx(source,index){if(confirm('এই লেনদেনটি মুছে ফেলবেন?')){db[source].splice(index,1);save();drawBankStatement();sidebar()}}
+function renderModule(){let rows=db[current],f=fields[current];$('main').innerHTML=pageHead(titles[current],`${rows.length} records • Add, edit, delete and print records`)+`<div class="panel"><div class="panelbody"><div class="toolbar no-print"><input id="search" placeholder="Search records..." oninput="filterRows()"><span class="muted">${rows.length} records</span><button class="btn small" onclick="exportModuleCSV()">Export this section</button></div><div id="tableArea">${tableHTML(rows,f)}</div></div></div>`}
+function tableHTML(rows,f){if(!rows.length)return '<div class="empty">No records yet. Click “Add New” to create your first record.</div>';let cols=f.filter(x=>x[0]!=='notes');return `<div class="tablewrap"><table><thead><tr>${cols.map(x=>`<th>${x[1]}</th>`).join('')}<th class="no-print">Actions</th></tr></thead><tbody>${rows.map((r,i)=>`<tr>${cols.map(x=>`<td>${x[2]==='number'?money(r[x[0]]):esc(r[x[0]]||'—')}</td>`).join('')}<td class="no-print row-actions"><button class="btn small" onclick="openForm(${i})">Edit</button> <button class="btn small red" onclick="delRow(${i})">Delete</button></td></tr>`).join('')}</tbody></table></div>`}
+function filterRows(){let q=$('search').value.toLowerCase(),rows=db[current].filter(r=>Object.values(r).join(' ').toLowerCase().includes(q));$('tableArea').innerHTML=tableHTML(rows,fields[current])}
+function openForm(i=null){editing=i;let f=fields[current],r=i===null?{}:db[current][i];let form=f.map(x=>{let val=r[x[0]]??'';let control=x[2]==='select'?`<select name="${x[0]}">${x[3].split(',').map(v=>`<option ${v===val?'selected':''}>${v}</option>`).join('')}</select>`:`<input name="${x[0]}" type="${x[2]||'text'}" value="${esc(val)}" ${x[2]==='number'?'step="0.01"':''}>`;return `<div class="field"><label>${x[1]}</label>${control}</div>`}).join('');let box=document.createElement('div');box.className='panel';box.id='entryPanel';box.innerHTML=`<h3>${i===null?'Add New':'Edit'} — ${titles[current]}</h3><div class="panelbody"><form id="entryForm"><div class="formgrid">${form}</div><div class="actions" style="margin-top:16px"><button class="btn primary" type="submit">Save Record</button><button class="btn" type="button" onclick="closeForm()">Cancel</button></div></form></div>`;$('main').prepend(box);window.scrollTo({top:0,behavior:'smooth'});$('entryForm').onsubmit=e=>{e.preventDefault();let data=Object.fromEntries(new FormData(e.target).entries());f.forEach(x=>{if(x[2]==='number')data[x[0]]=Number(data[x[0]]||0)});if(current==='sales'||current==='purchases'){let total=Number(data.subtotal||0)+Number(data.tax||0)-(Number(data.discount||0));data.amount=total;data.due=Math.max(0,total-Number(data.paid||0))}if(i===null)db[current].push(data);else db[current][i]=data;save();closeForm();sidebar();render()}}
+function closeForm(){let e=$('entryPanel');if(e)e.remove()}
+function delRow(i){if(confirm('এই রেকর্ডটি স্থায়ীভাবে মুছে ফেলবেন?')){db[current].splice(i,1);save();sidebar();render()}}
+function reports(){let groups=[
+['Financial Statements',['Profit and Loss Statement','Profit and Loss Statement by Group','Balance Sheet','Balance Sheet by Group','Cash Flow Statement','Statement of Changes in Equity']],
+['Cash & cash equivalents',['Receipts & Payments Summary','Bank Account Summary','All Bank Balance Sheet']],
+['General Ledger',['Trial Balance','General Ledger Summary','General Ledger Transactions']],
+['Customers',['Aged Receivables','Customer Summary','Customer Statements (Transactions)']],
+['Suppliers',['Aged Payables','Supplier Summary','Supplier Statements (Unpaid Invoices)','Supplier Statements (Transactions)']],
+['Sales Invoices',['Sales Invoice Totals by Customer','Sales Invoice Totals by Item','Sales Invoice Totals by Custom Field']],
+['Inventory Items',['Inventory Value Summary','Inventory Quantity Summary','Inventory Profit Margin']],
+['Employees',['Employee Summary','Employee Statements (Transactions)']],
+['Payslips',['Payslip Summary','Payslip Totals per Item and Employee']],
+['Capital Accounts',['Capital Accounts Summary']],
+['Fixed Assets',['Fixed Asset Register','Depreciation Summary']],
+['Forecasts',['Profit and Loss Statement (Actual vs Budget)']]
+];$('main').innerHTML=pageHead('Reports','Financial statements, account summaries and business reports')+`<div class="reportgrid">${groups.map((g,i)=>`<section class="reportgroup"><h3>${g[0]}</h3>${g[1].map((r,j)=>`<div class="reportlink" onclick="openReport('${r.replace(/'/g,"\\'")}')">${r} →</div>`).join('')}</section>`).join('')}</div><div id="reportOutput"></div>`}
+function openReport(name){let html='',income=sum('receipts','amount'),expense=sum('payments','amount'),sales=sum('sales','amount'),purchases=sum('purchases','amount'),cash=income-expense,stock=db.inventory.reduce((a,x)=>a+Number(x.quantity||0)*Number(x.cost||0),0);
+if(name.includes('Profit and Loss'))html=reportTable(name,[['Sales Revenue',sales],['Other Receipts',income],['Total Income',sales+income],['Purchase / Cost',purchases],['Operating Expenses',expense],['Net Profit / (Loss)',sales+income-purchases-expense]]);
+else if(name.includes('Balance Sheet'))html=reportTable(name,[['Cash / Bank (net movement)',cash],['Inventory',stock],['Total listed assets',cash+stock],['Supplier Payables',sum('purchases','due')],['Customer Receivables',sum('sales','due')],['Capital Introduced',sum('capital','amount')],['Balancing difference (indicative)',cash+stock-sum('purchases','due')-sum('capital','amount')]]);
+else if(name.includes('Cash Flow')||name.includes('Receipts & Payments'))html=reportTable(name,[['Cash Receipts',income],['Cash Payments',expense],['Net Cash Flow',cash]]);
+else if(name.includes('All Bank Balance Sheet')||name.includes('Bank Account')){let rows=db.bank.map(a=>{let tx=bankTx(a.accountno||a.name),cin=tx.reduce((n,t)=>n+t.credit,0),cout=tx.reduce((n,t)=>n+t.debit,0);return [`${a.name||a.bankname||'Bank'} | ${a.holder||''} | A/C: ${a.accountno||''}`,Number(a.opening||0),cout,cin,Number(a.opening||0)+cin-cout]});let totals=rows.reduce((z,r)=>z.map((v,i)=>v+(i?r[i]:0)),[0,0,0,0,0]);html=reportTable(name,rows.concat([['Total All Bank Accounts',totals[1],totals[2],totals[3],totals[4]]]),['Bank / Account Holder / Account No.','Opening Balance','Total Debit','Total Credit','Closing Balance']);}
+else if(name.includes('Trial Balance'))html=reportTable(name,[['Total Debit (journal entries)',sum('journals','debitamount')],['Total Credit (journal entries)',sum('journals','creditamount')],['Difference',sum('journals','debitamount')-sum('journals','creditamount')]]);
+else if(name.includes('Receivable')||name.includes('Customer'))html=reportTable(name,db.sales.map(x=>[`${x.customer||''} · ${x.number||''}`,Number(x.due||0)]));
+else if(name.includes('Payable')||name.includes('Supplier'))html=reportTable(name,db.purchases.map(x=>[`${x.supplier||''} · ${x.number||''}`,Number(x.due||0)]));
+else if(name.includes('Inventory'))html=reportTable(name,db.inventory.map(x=>[`${x.name||''} (${x.sku||''})`,Number(x.quantity||0),Number(x.quantity||0)*Number(x.cost||0)]),['Item','Quantity','Stock Value']);
+else if(name.includes('Capital'))html=reportTable(name,db.capital.map(x=>[`${x.holder||''} · ${x.type||''}`,Number(x.amount||0)]));
+else if(name.includes('Depreciation'))html=reportTable(name,db.depreciation.map(x=>[x.asset||'',Number(x.amount||0)]));
+else html=reportTable(name,modules.filter(m=>!['summary','reports'].includes(m[0])).map(m=>[m[1],db[m[0]].length]));
+$('reportOutput').innerHTML=`<div class="panel" style="margin-top:18px"><h3>${esc(name)}</h3><div class="panelbody"><div class="actions no-print" style="margin-bottom:12px"><button class="btn primary" onclick="window.print()">🖨 Print / Save PDF</button><button class="btn" onclick="exportReportCSV()">Export CSV</button></div>${html}<p class="muted" style="font-size:11px">Note: This report is based on records entered in pieπ. For formal financial statements, complete all opening balances, journals and adjustments.</p></div></div>`}
+function reportTable(title,rows,heads=['Particulars','Amount']){return `<div class="tablewrap"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.map(r=>`<tr>${r.map((v,i)=>`<td>${i===0?esc(v):money(v)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${heads.length}" class="empty">No data available</td></tr>`}</tbody></table></div>`}
+function exportReportCSV(){let t=$('reportOutput')?.querySelector('table');if(t)download('piepi-report.csv',[...t.rows].map(r=>[...r.cells].map(c=>c.innerText).join(',')).join('\\n'),'text/csv')}
+function showSettings(){current='settings';sidebar();$('main').innerHTML=pageHead('Settings','Business profile and preferences',false)+`<div class="panel"><h3>Business Information</h3><div class="panelbody"><form id="settingsForm"><div class="formgrid">${[['name','Business Name'],['email','Email'],['phone','Phone'],['address','Address'],['currency','Currency (e.g. BDT)']].map(x=>`<div><label>${x[1]}</label><input name="${x[0]}" value="${esc(company[x[0]]||'')}"></div>`).join('')}</div><button class="btn primary" style="margin-top:14px">Save Settings</button></form></div></div><div class="notice">Data is saved in this browser using local storage. Use Backup regularly and keep a copy of your JSON file in a safe place.</div>`;$('settingsForm').onsubmit=e=>{e.preventDefault();company=Object.fromEntries(new FormData(e.target));localStorage.setItem('piepi_company',JSON.stringify(company));alert('Settings saved');render()}}
+function backupJSON(){download('piepi-backup-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify({company,db},null,2),'application/json')}
+function restoreJSON(e){let file=e.target.files[0];if(!file)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!d.db)throw 0;db=d.db;modules.forEach(m=>{if(!Array.isArray(db[m[0]]))db[m[0]]=[]});company=d.company||company;save();localStorage.setItem('piepi_company',JSON.stringify(company));sidebar();render();alert('Backup restored successfully')}catch(_){alert('Invalid backup file')}};r.readAsText(file);e.target.value=''}
+function download(name,content,type){let a=document.createElement('a'),u=URL.createObjectURL(new Blob([content],{type}));a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+function exportCSV(){let lines=['Section,Records'];modules.filter(m=>!['summary','reports'].includes(m[0])).forEach(m=>lines.push(`${m[1]},${db[m[0]].length}`));download('piepi-overview.csv',lines.join('\\n'),'text/csv')}
+function exportModuleCSV(){let rows=db[current],f=fields[current],lines=[f.map(x=>'"'+x[1]+'"').join(',')];rows.forEach(r=>lines.push(f.map(x=>'"'+String(r[x[0]]??'').replace(/"/g,'""')+'"').join(',')));download('piepi-'+current+'.csv','\\ufeff'+lines.join('\\n'),'text/csv')}
+sidebar();render();
+</script></body></html>
